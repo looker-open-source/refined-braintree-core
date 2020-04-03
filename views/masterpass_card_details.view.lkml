@@ -1,5 +1,5 @@
 view: masterpass_card_details {
-  sql_table_name: `spencer-white-tckt87992.braintreedev_v1.MASTERPASS_CARD_DETAILS`
+  sql_table_name: @{DATASET_NAME}.MASTERPASS_CARD_DETAILS
     ;;
 
   dimension: bin {

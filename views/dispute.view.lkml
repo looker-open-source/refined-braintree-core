@@ -1,5 +1,5 @@
 view: dispute {
-  sql_table_name: `spencer-white-tckt87992.braintreedev_v1.DISPUTE`
+  sql_table_name: @{DATASET_NAME}.DISPUTE
     ;;
   drill_fields: [id]
 

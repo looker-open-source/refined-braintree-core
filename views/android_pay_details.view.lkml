@@ -1,5 +1,5 @@
 view: android_pay_details {
-  sql_table_name: `spencer-white-tckt87992.braintreedev_v1.ANDROID_PAY_DETAILS`
+  sql_table_name: @{DATASET_NAME}.ANDROID_PAY_DETAILS
     ;;
 
   dimension: bin {

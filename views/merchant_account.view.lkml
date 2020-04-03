@@ -1,5 +1,5 @@
 view: merchant_account {
-  sql_table_name: `spencer-white-tckt87992.braintreedev_v1.MERCHANT_ACCOUNT`
+  sql_table_name: @{DATASET_NAME}.MERCHANT_ACCOUNT
     ;;
   drill_fields: [id]
 

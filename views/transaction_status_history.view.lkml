@@ -1,5 +1,5 @@
 view: transaction_status_history {
-  sql_table_name: `spencer-white-tckt87992.braintreedev_v1.TRANSACTION_STATUS_HISTORY`
+  sql_table_name: @{DATASET_NAME}.TRANSACTION_STATUS_HISTORY
     ;;
 
   dimension: amount {

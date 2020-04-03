@@ -1,5 +1,5 @@
 view: subscription_discount {
-  sql_table_name: `spencer-white-tckt87992.braintreedev_v1.SUBSCRIPTION_DISCOUNT`
+  sql_table_name: @{DATASET_NAME}.SUBSCRIPTION_DISCOUNT
     ;;
   drill_fields: [id]
 

@@ -1,5 +1,5 @@
 view: visa_checkout_details {
-  sql_table_name: `spencer-white-tckt87992.braintreedev_v1.VISA_CHECKOUT_DETAILS`
+  sql_table_name: @{DATASET_NAME}.VISA_CHECKOUT_DETAILS
     ;;
 
   dimension: bin {

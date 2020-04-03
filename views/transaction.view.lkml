@@ -1,5 +1,5 @@
 view: transaction {
-  sql_table_name: `spencer-white-tckt87992.braintreedev_v1.TRANSACTION`
+  sql_table_name: @{DATASET_NAME}.TRANSACTION
     ;;
   drill_fields: [refunded_transaction_id]
 

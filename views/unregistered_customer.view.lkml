@@ -1,5 +1,5 @@
 view: unregistered_customer {
-  sql_table_name: `spencer-white-tckt87992.braintreedev_v1.UNREGISTERED_CUSTOMER`
+  sql_table_name: @{DATASET_NAME}.UNREGISTERED_CUSTOMER
     ;;
   drill_fields: [id]
 

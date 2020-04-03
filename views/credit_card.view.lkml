@@ -1,5 +1,5 @@
 view: credit_card {
-  sql_table_name: `spencer-white-tckt87992.braintreedev_v1.CREDIT_CARD`
+  sql_table_name: @{DATASET_NAME}.CREDIT_CARD
     ;;
 
   dimension: address_company {

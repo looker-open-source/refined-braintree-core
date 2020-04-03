@@ -1,5 +1,5 @@
 view: transaction {
-  sql_table_name: @{DATASET_NAME}.TRANSACTION
+  sql_table_name: `spencer-white-tckt87992.braintree.TRANSACTION`
     ;;
   drill_fields: [refunded_transaction_id]
 
@@ -268,17 +268,17 @@ view: transaction {
       merchant_account.address_country_name,
       merchant_account.id,
       merchant_account.first_name,
-      apple_pay_card.count,
-      android_pay_details.count,
       unregistered_customer.count,
+      android_pay_details.count,
+      apple_pay_card.count,
       masterpass_card_details.count,
-      transaction_discount.count,
-      paypal_details.count,
       transaction_status_history.count,
       credit_card.count,
+      paypal_details.count,
       dispute.count,
       visa_checkout_details.count,
-      transaction_add_on.count
+      transaction_add_on.count,
+      venmo_details.count
     ]
   }
 }

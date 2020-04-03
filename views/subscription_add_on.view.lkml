@@ -1,5 +1,5 @@
 view: subscription_add_on {
-  sql_table_name: @{DATASET_NAME}.SUBSCRIPTION_ADD_ON
+  sql_table_name: `spencer-white-tckt87992.braintree.SUBSCRIPTION_ADD_ON`
     ;;
   drill_fields: [id]
 
@@ -44,9 +44,9 @@ view: subscription_add_on {
     sql: ${TABLE}.number_of_billing_cycles ;;
   }
 
-  dimension: pland_id {
+  dimension: plan_id {
     type: number
-    sql: ${TABLE}.pland_id ;;
+    sql: ${TABLE}.plan_id ;;
   }
 
   dimension: quantity {

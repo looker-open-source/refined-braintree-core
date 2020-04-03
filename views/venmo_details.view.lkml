@@ -1,40 +1,20 @@
-view: dispute {
-  sql_table_name: `spencer-white-tckt87992.braintree.DISPUTE`
+view: venmo_details {
+  sql_table_name: `spencer-white-tckt87992.braintree.VENMO_DETAILS`
     ;;
 
-  dimension: amount {
+  dimension: image_url {
+    type: string
+    sql: ${TABLE}.image_url ;;
+  }
+
+  dimension: source_description {
+    type: string
+    sql: ${TABLE}.source_description ;;
+  }
+
+  dimension: token {
     type: number
-    sql: ${TABLE}.amount ;;
-  }
-
-  dimension: kind {
-    type: string
-    sql: ${TABLE}.kind ;;
-  }
-
-  dimension: opened_date {
-    type: string
-    sql: ${TABLE}.opened_date ;;
-  }
-
-  dimension: reason {
-    type: string
-    sql: ${TABLE}.reason ;;
-  }
-
-  dimension: received_date {
-    type: string
-    sql: ${TABLE}.received_date ;;
-  }
-
-  dimension: reply_by_date {
-    type: string
-    sql: ${TABLE}.reply_by_date ;;
-  }
-
-  dimension: status {
-    type: string
-    sql: ${TABLE}.status ;;
+    sql: ${TABLE}.token ;;
   }
 
   dimension: transaction_id {
@@ -43,9 +23,14 @@ view: dispute {
     sql: ${TABLE}.transaction_id ;;
   }
 
-  dimension: won_date {
+  dimension: username {
     type: string
-    sql: ${TABLE}.won_date ;;
+    sql: ${TABLE}.username ;;
+  }
+
+  dimension: venmo_user_id {
+    type: number
+    sql: ${TABLE}.venmo_user_id ;;
   }
 
   measure: count {
@@ -56,6 +41,7 @@ view: dispute {
   # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
+      username,
       transaction.shipping_address_country_name,
       transaction.billing_address_country_name,
       transaction.shipping_address_first_name,

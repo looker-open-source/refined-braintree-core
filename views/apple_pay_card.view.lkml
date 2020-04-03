@@ -1,5 +1,5 @@
 view: apple_pay_card {
-  sql_table_name: @{DATASET_NAME}.APPLE_PAY_CARD
+  sql_table_name: `spencer-white-tckt87992.braintree.APPLE_PAY_CARD`
     ;;
 
   dimension: card_type {
@@ -17,6 +17,11 @@ view: apple_pay_card {
     sql: ${TABLE}.expiration_year ;;
   }
 
+  dimension: last4 {
+    type: number
+    sql: ${TABLE}.last4 ;;
+  }
+
   dimension: payment_instrument_name {
     type: string
     sql: ${TABLE}.payment_instrument_name ;;
@@ -25,11 +30,6 @@ view: apple_pay_card {
   dimension: source_description {
     type: string
     sql: ${TABLE}.source_description ;;
-  }
-
-  dimension: task4 {
-    type: number
-    sql: ${TABLE}.task4 ;;
   }
 
   dimension: token {

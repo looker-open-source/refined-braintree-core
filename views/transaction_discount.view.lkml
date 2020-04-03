@@ -1,5 +1,5 @@
 view: transaction_discount {
-  sql_table_name: @{DATASET_NAME}.TRANSACTION_DISCOUNT
+  sql_table_name: `spencer-white-tckt87992.braintree.TRANSACTION_DISCOUNT`
     ;;
   drill_fields: [id]
 
@@ -54,29 +54,13 @@ view: transaction_discount {
     sql: ${TABLE}.quantity ;;
   }
 
-  dimension: transaction_id {
+  dimension: trasaction_id {
     type: number
-    # hidden: yes
-    sql: ${TABLE}.transaction_id ;;
+    sql: ${TABLE}.trasaction_id ;;
   }
 
   measure: count {
     type: count
-    drill_fields: [detail*]
-  }
-
-  # ----- Sets of fields for drilling ------
-  set: detail {
-    fields: [
-      id,
-      name,
-      transaction.shipping_address_country_name,
-      transaction.billing_address_country_name,
-      transaction.shipping_address_first_name,
-      transaction.refunded_transaction_id,
-      transaction.shipping_address_last_name,
-      transaction.billing_address_first_name,
-      transaction.billing_address_last_name
-    ]
+    drill_fields: [id, name]
   }
 }

@@ -1,5 +1,5 @@
 view: customer_address {
-  sql_table_name: @{DATASET_NAME}.CUSTOMER_ADDRESS
+  sql_table_name: `spencer-white-tckt87992.braintree.CUSTOMER_ADDRESS`
     ;;
   drill_fields: [id]
 

@@ -1,5 +1,5 @@
 view: registered_customer {
-  sql_table_name: @{DATASET_NAME}.REGISTERED_CUSTOMER
+  sql_table_name: `spencer-white-tckt87992.braintree.REGISTERED_CUSTOMER`
     ;;
   drill_fields: [id]
 
@@ -7,6 +7,11 @@ view: registered_customer {
     primary_key: yes
     type: number
     sql: ${TABLE}.id ;;
+  }
+
+  dimension: company {
+    type: string
+    sql: ${TABLE}.company ;;
   }
 
   dimension: created_at {

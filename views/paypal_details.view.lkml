@@ -1,5 +1,5 @@
 view: paypal_details {
-  sql_table_name: @{DATASET_NAME}.PAYPAL_DETAILS
+  sql_table_name: `spencer-white-tckt87992.braintree.PAYPAL_DETAILS`
     ;;
 
   dimension: authorization_id {

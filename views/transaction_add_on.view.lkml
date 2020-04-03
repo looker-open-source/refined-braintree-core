@@ -1,5 +1,5 @@
 view: transaction_add_on {
-  sql_table_name: @{DATASET_NAME}.TRANSACTION_ADD_ON
+  sql_table_name: `spencer-white-tckt87992.braintree.TRANSACTION_ADD_ON`
     ;;
   drill_fields: [id]
 

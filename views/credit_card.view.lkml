@@ -1,5 +1,5 @@
 view: credit_card {
-  sql_table_name: @{DATASET_NAME}.CREDIT_CARD
+  sql_table_name: `spencer-white-tckt87992.braintree.CREDIT_CARD`
     ;;
 
   dimension: address_company {
@@ -156,7 +156,6 @@ view: credit_card {
     type: number
     # hidden: yes
     sql: ${TABLE}.transaction_id ;;
-    primary_key: yes
   }
 
   dimension: unique_number_identifier {

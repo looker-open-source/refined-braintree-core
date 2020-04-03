@@ -1,5 +1,5 @@
 view: subscription {
-  sql_table_name: @{DATASET_NAME}.SUBSCRIPTION
+  sql_table_name: `spencer-white-tckt87992.braintree.SUBSCRIPTION`
     ;;
   drill_fields: [id]
 
@@ -91,7 +91,7 @@ view: subscription {
   }
 
   dimension: payment_method_token {
-    type: string
+    type: number
     sql: ${TABLE}.payment_method_token ;;
   }
 
@@ -142,8 +142,8 @@ view: subscription {
       merchant_account.first_name,
       subscription_discount.count,
       subscription_status_history.count,
-      transaction.count,
-      subscription_add_on.count
+      subscription_add_on.count,
+      transaction.count
     ]
   }
 }

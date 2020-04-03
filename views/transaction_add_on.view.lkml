@@ -1,16 +1,17 @@
 view: transaction_add_on {
-  sql_table_name: `spencer-white-tckt87992.braintree.TRANSACTION_ADD_ON`
-    ;;
+  sql_table_name: `spencer-white-tckt87992.braintree.TRANSACTION_ADD_ON`;;
   drill_fields: [id]
 
   dimension: id {
     primary_key: yes
     type: number
     sql: ${TABLE}.id ;;
+    hidden: yes
   }
 
   dimension: amount {
     type: number
+    hidden: yes
     sql: ${TABLE}.amount ;;
   }
 
@@ -46,23 +47,45 @@ view: transaction_add_on {
 
   dimension: plan_id {
     type: number
+    hidden: yes
     sql: ${TABLE}.plan_id ;;
   }
 
   dimension: quantity {
     type: number
+    hidden: yes
     sql: ${TABLE}.quantity ;;
   }
 
   dimension: transaction_id {
     type: number
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}.transaction_id ;;
   }
 
   measure: count {
     type: count
+    label: "Number of Add-Ons"
+    value_format_name: decimal_0
     drill_fields: [detail*]
+  }
+
+  measure: total_add_on_amount {
+    type: sum
+    sql: ${amount} ;;
+    value_format_name: usd
+  }
+
+  measure: total_add_on_quantity {
+    type: sum
+    sql: ${quantity} ;;
+    value_format_name: decimal_0
+  }
+
+  measure: average_add_on_quantity {
+    type: average
+    sql: ${quantity} ;;
+    value_format_name: decimal_1
   }
 
   # ----- Sets of fields for drilling ------

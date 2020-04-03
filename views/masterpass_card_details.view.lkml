@@ -4,6 +4,7 @@ view: masterpass_card_details {
 
   dimension: bin {
     type: number
+    group_label: "Card Details"
     sql: ${TABLE}.bin ;;
   }
 
@@ -14,6 +15,7 @@ view: masterpass_card_details {
 
   dimension: cardholder_name {
     type: string
+    group_label: "Card Details"
     sql: ${TABLE}.cardholder_name ;;
   }
 
@@ -24,6 +26,7 @@ view: masterpass_card_details {
 
   dimension: country_of_issuance {
     type: string
+    group_label: "Card Details"
     sql: ${TABLE}.country_of_issuance ;;
   }
 
@@ -39,11 +42,13 @@ view: masterpass_card_details {
 
   dimension: expiration_month {
     type: string
+    group_label: "Card Details"
     sql: ${TABLE}.expiration_month ;;
   }
 
   dimension: expiration_year {
     type: string
+    group_label: "Card Details"
     sql: ${TABLE}.expiration_year ;;
   }
 
@@ -59,11 +64,13 @@ view: masterpass_card_details {
 
   dimension: issuing_bank {
     type: string
+    group_label: "Card Details"
     sql: ${TABLE}.issuing_bank ;;
   }
 
   dimension: last4 {
     type: number
+    group_label: "Card Details"
     sql: ${TABLE}.last4 ;;
   }
 
@@ -79,17 +86,20 @@ view: masterpass_card_details {
 
   dimension: product_id {
     type: number
+    hidden: yes
     sql: ${TABLE}.product_id ;;
   }
 
   dimension: token {
     type: number
+    group_label: "Card Details"
     sql: ${TABLE}.token ;;
   }
 
   dimension: transaction_id {
     type: number
-    # hidden: yes
+    hidden: yes
+    primary_key: yes
     sql: ${TABLE}.transaction_id ;;
   }
 

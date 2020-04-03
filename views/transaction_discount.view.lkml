@@ -54,9 +54,9 @@ view: transaction_discount {
     sql: ${TABLE}.quantity ;;
   }
 
-  dimension: trasaction_id {
+  dimension: transaction_id {
     type: number
-    sql: ${TABLE}.trasaction_id ;;
+    sql: ${TABLE}.transaction_id ;;
   }
 
   measure: count {

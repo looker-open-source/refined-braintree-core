@@ -13,7 +13,7 @@ constant: CONNECTION_NAME {
 }
 
 constant: DATASET_NAME {
-  value: "braintreedev_v1"
+  value: "braintree"
   export: override_required
 }
 

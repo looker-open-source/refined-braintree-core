@@ -156,6 +156,7 @@ view: credit_card {
     type: number
     # hidden: yes
     sql: ${TABLE}.transaction_id ;;
+    primary_key: yes
   }
 
   dimension: unique_number_identifier {

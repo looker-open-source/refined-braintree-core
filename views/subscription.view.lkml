@@ -33,8 +33,18 @@ view: subscription {
     description: "The start date for the current billing period, regardless of subscription status. Automatic retries on past due subscriptions do not change the start and end dates of the current billing period."
   }
 
-  dimension: created_at {
-    type: string
+  dimension_group: created {
+    timeframes: [raw,
+      date,
+      week,
+      month,
+      quarter,
+      year,
+      fiscal_month_num,
+      fiscal_quarter,
+      fiscal_quarter_of_year,
+      fiscal_year]
+    type: time
     sql: ${TABLE}.created_at ;;
     description: "The date/time the object was created."
   }
@@ -98,7 +108,7 @@ view: subscription {
   }
 
   dimension: paid_through_date {
-    type: string
+    type: date
     sql: ${TABLE}.paid_through_date ;;
     description: "The date through which the subscription has been paid. It is the billing_period_end_date at the time of the last successful transaction. If the subscription is pending (has a future start date), this field is nil."
   }
@@ -138,14 +148,26 @@ view: subscription {
     description: "The trial unit specified in a plan. Specify day or month. Specifying a trial duration unit via the API will override the subscription's plan details."
   }
 
-  dimension: updated_at {
-    type: string
+  dimension_group: updated {
+    timeframes: [raw,
+      date,
+      week,
+      month,
+      quarter,
+      year,
+      fiscal_month_num,
+      fiscal_quarter,
+      fiscal_quarter_of_year,
+      fiscal_year]
+    type: time
     sql: ${TABLE}.updated_at ;;
     description: "The date/time the object was last updated. If a subscription has been canceled, this value will represent the date/time of cancellation."
   }
 
   measure: count {
     type: count
+    label: "Number of Subscriptions"
+    value_format_name: decimal_0
     drill_fields: [detail*]
   }
 

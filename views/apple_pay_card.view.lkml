@@ -50,6 +50,8 @@ view: apple_pay_card {
 
   measure: count {
     type: count
+    label: "Number of Apple Pay Transactions"
+    value_format_name: decimal_0
     drill_fields: [detail*]
   }
 

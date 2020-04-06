@@ -14,9 +14,19 @@ view: registered_customer {
     sql: ${TABLE}.company ;;
   }
 
-  dimension: created_at {
-    type: string
+  dimension_group: created {
+    type: time
     sql: ${TABLE}.created_at ;;
+    timeframes: [raw,
+      date,
+      week,
+      month,
+      quarter,
+      year,
+      fiscal_month_num,
+      fiscal_quarter,
+      fiscal_quarter_of_year,
+      fiscal_year]
   }
 
   dimension: email {
@@ -39,8 +49,18 @@ view: registered_customer {
     sql: ${TABLE}.phone ;;
   }
 
-  dimension: updated_at {
-    type: string
+  dimension_group: updated {
+    timeframes: [raw,
+      date,
+      week,
+      month,
+      quarter,
+      year,
+      fiscal_month_num,
+      fiscal_quarter,
+      fiscal_quarter_of_year,
+      fiscal_year]
+    type: time
     sql: ${TABLE}.updated_at ;;
   }
 

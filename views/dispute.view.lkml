@@ -17,7 +17,16 @@ view: dispute {
   dimension_group: opened {
     type: time
     sql: ${TABLE}.opened_date ;;
-    timeframes: [raw, date, month, year]
+    timeframes: [raw,
+      date,
+      week,
+      month,
+      quarter,
+      year,
+      fiscal_month_num,
+      fiscal_quarter,
+      fiscal_quarter_of_year,
+      fiscal_year]
   }
 
   dimension: reason {
@@ -29,7 +38,16 @@ view: dispute {
   dimension_group: received {
     type: time
     sql: ${TABLE}.received_date ;;
-    timeframes: [raw, date, month, year]
+    timeframes: [raw,
+      date,
+      week,
+      month,
+      quarter,
+      year,
+      fiscal_month_num,
+      fiscal_quarter,
+      fiscal_quarter_of_year,
+      fiscal_year]
     description: "The date the dispute was received by the merchant."
   }
 

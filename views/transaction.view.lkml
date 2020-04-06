@@ -290,13 +290,31 @@ view: transaction {
   dimension_group: created {
     type: time
     sql: ${TABLE}.created_at ;;
-    timeframes: [raw, date, month, year]
+    timeframes: [raw,
+      date,
+      week,
+      month,
+      quarter,
+      year,
+      fiscal_month_num,
+      fiscal_quarter,
+      fiscal_quarter_of_year,
+      fiscal_year]
   }
 
   dimension_group: updated {
     type: time
     sql: ${TABLE}.updated_at ;;
-    timeframes: [raw, date, month, year]
+    timeframes: [raw,
+      date,
+      week,
+      month,
+      quarter,
+      year,
+      fiscal_month_num,
+      fiscal_quarter,
+      fiscal_quarter_of_year,
+      fiscal_year]
   }
 
   measure: count {

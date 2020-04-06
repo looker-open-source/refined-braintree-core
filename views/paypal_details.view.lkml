@@ -1,16 +1,15 @@
 view: paypal_details {
-  sql_table_name: `spencer-white-tckt87992.braintree.PAYPAL_DETAILS`
-    ;;
+  sql_table_name: `spencer-white-tckt87992.braintree.PAYPAL_DETAILS` ;;
 
   dimension: authorization_id {
     type: number
-    hidden:  yes
+    hidden: yes
     sql: ${TABLE}.authorization_id ;;
   }
 
   dimension: capture_id {
     type: number
-    hidden:  yes
+    hidden: yes
     sql: ${TABLE}.capture_id ;;
   }
 
@@ -21,7 +20,7 @@ view: paypal_details {
 
   dimension: debug_id {
     type: number
-    hidden:  yes
+    hidden: yes
     sql: ${TABLE}.debug_id ;;
   }
 
@@ -33,6 +32,7 @@ view: paypal_details {
   dimension: image_url {
     type: string
     sql: ${TABLE}.image_url ;;
+    description: "A URL that points to a payment method image resource (a PNG file) hosted by Braintree."
   }
 
   dimension: payee_email {
@@ -56,6 +56,7 @@ view: paypal_details {
     type: number
     hidden: yes
     sql: ${TABLE}.payer_id ;;
+    description: "The ID belonging to the PayPal account."
   }
 
   dimension: payer_last_name {
@@ -72,13 +73,13 @@ view: paypal_details {
 
   dimension: payment_id {
     type: number
-    hidden:  yes
+    hidden: yes
     sql: ${TABLE}.payment_id ;;
   }
 
   dimension: refund_id {
     type: number
-    hidden:  yes
+    hidden: yes
     sql: ${TABLE}.refund_id ;;
   }
 
@@ -90,6 +91,7 @@ view: paypal_details {
   dimension: token {
     type: number
     sql: ${TABLE}.token ;;
+    description: "An alphanumeric value that references a specific payment method stored in your Vault."
   }
 
   dimension: transaction_fee_amount {
@@ -121,7 +123,6 @@ view: paypal_details {
     drill_fields: [detail*]
   }
 
-  # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
       payer_last_name,

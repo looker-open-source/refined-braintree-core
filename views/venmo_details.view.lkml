@@ -1,20 +1,22 @@
 view: venmo_details {
-  sql_table_name: `spencer-white-tckt87992.braintree.VENMO_DETAILS`
-    ;;
+  sql_table_name: `spencer-white-tckt87992.braintree.VENMO_DETAILS` ;;
 
   dimension: image_url {
     type: string
     sql: ${TABLE}.image_url ;;
+    description: "A URL that points to a payment method image resource (a PNG file) hosted by Braintree."
   }
 
   dimension: source_description {
     type: string
     sql: ${TABLE}.source_description ;;
+    description: "A short description of the payment method, including the Venmo username."
   }
 
   dimension: token {
     type: number
     sql: ${TABLE}.token ;;
+    description: "An alphanumeric value that references a specific payment method stored in your Vault."
   }
 
   dimension: transaction_id {
@@ -27,11 +29,13 @@ view: venmo_details {
   dimension: username {
     type: string
     sql: ${TABLE}.username ;;
+    description: "The Venmo username of the Venmo account."
   }
 
   dimension: venmo_user_id {
     type: number
     sql: ${TABLE}.venmo_user_id ;;
+    description: "The Venmo user ID of the Venmo account."
   }
 
   measure: count {
@@ -40,7 +44,6 @@ view: venmo_details {
     drill_fields: [detail*]
   }
 
-  # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
       username,

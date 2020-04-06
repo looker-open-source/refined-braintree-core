@@ -1,16 +1,17 @@
 view: dispute {
-  sql_table_name: `spencer-white-tckt87992.braintree.DISPUTE`
-    ;;
+  sql_table_name: `spencer-white-tckt87992.braintree.DISPUTE` ;;
 
   dimension: amount {
     type: number
     hidden: yes
     sql: ${TABLE}.amount ;;
+    description: "The billing amount of the request."
   }
 
   dimension: kind {
     type: string
     sql: ${TABLE}.kind ;;
+    description: "The kind of dispute. "
   }
 
   dimension_group: opened {
@@ -22,22 +23,26 @@ view: dispute {
   dimension: reason {
     type: string
     sql: ${TABLE}.reason ;;
+    description: "The reason the dispute was created. "
   }
 
   dimension_group: received {
     type: time
     sql: ${TABLE}.received_date ;;
     timeframes: [raw, date, month, year]
+    description: "The date the dispute was received by the merchant."
   }
 
   dimension: reply_by_date {
     type: date
     sql: ${TABLE}.reply_by_date ;;
+    description: "The merchant Reply By date that is referenced in the gateway."
   }
 
   dimension: status {
     type: string
     sql: ${TABLE}.status ;;
+    description: "The status of the dispute. "
   }
 
   dimension: transaction_id {

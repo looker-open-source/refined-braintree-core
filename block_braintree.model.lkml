@@ -10,6 +10,7 @@ include: "//@{CONFIG_PROJECT_NAME}/*.dashboard"
 
 
 explore: transaction {
+  label: "💸Transactions"
   join: paypal_details {
     sql_on: ${transaction.id} = ${paypal_details.transaction_id} ;;
     relationship: many_to_one
@@ -80,6 +81,7 @@ explore: transaction {
 
 
 explore: subscription {
+  label: "🦠️Subscriptions"
   sql_always_where: ${transaction.subscription_id} IS NOT NULL ;;
   join: transaction {
     sql_on: ${subscription.id} = ${transaction.subscription_id} ;;

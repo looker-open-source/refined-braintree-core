@@ -1,12 +1,12 @@
 view: merchant_account {
-  sql_table_name: `spencer-white-tckt87992.braintree.MERCHANT_ACCOUNT`
-    ;;
+  sql_table_name: `spencer-white-tckt87992.braintree.MERCHANT_ACCOUNT` ;;
   drill_fields: [id]
 
   dimension: id {
     primary_key: yes
     type: number
     sql: ${TABLE}.id ;;
+    description: "Specifies the ID of the sub-merchant, which can be referenced when creating transactions with service fees."
   }
 
   dimension: address_company {
@@ -52,21 +52,25 @@ view: merchant_account {
   dimension: currency_iso_code {
     type: string
     sql: ${TABLE}.currency_iso_code ;;
+    description: "The ISO code for the currency the merchant account uses. See the ISO 4217 codes."
   }
 
   dimension: date_of_birth {
     type: string
     sql: ${TABLE}.date_of_birth ;;
+    description: "The applicant's date of birth."
   }
 
   dimension: email {
     type: string
     sql: ${TABLE}.email ;;
+    description: "Email address composed of ASCII characters."
   }
 
   dimension: first_name {
     type: string
     sql: ${TABLE}.first_name ;;
+    description: "The first name."
   }
 
   dimension: funding_details_account_number_last4 {
@@ -107,16 +111,19 @@ view: merchant_account {
   dimension: last_name {
     type: string
     sql: ${TABLE}.last_name ;;
+    description: "The last name."
   }
 
   dimension: phone {
     type: string
     sql: ${TABLE}.phone ;;
+    description: "The phone number."
   }
 
   dimension: status {
     type: string
     sql: ${TABLE}.status ;;
+    description: "The state of the merchant account can either be Pending, Active, or Suspended."
   }
 
   measure: count {
@@ -124,7 +131,6 @@ view: merchant_account {
     drill_fields: [detail*]
   }
 
-  # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
       id,

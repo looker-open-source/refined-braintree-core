@@ -1,15 +1,16 @@
 view: dispute {
-  sql_table_name: `spencer-white-tckt87992.braintree.DISPUTE`
-    ;;
+  sql_table_name: `spencer-white-tckt87992.braintree.DISPUTE` ;;
 
   dimension: amount {
     type: number
     sql: ${TABLE}.amount ;;
+    description: "The billing amount of the request."
   }
 
   dimension: kind {
     type: string
     sql: ${TABLE}.kind ;;
+    description: "The kind of dispute. "
   }
 
   dimension: opened_date {
@@ -20,26 +21,29 @@ view: dispute {
   dimension: reason {
     type: string
     sql: ${TABLE}.reason ;;
+    description: "The reason the dispute was created. "
   }
 
   dimension: received_date {
     type: string
     sql: ${TABLE}.received_date ;;
+    description: "The date the dispute was received by the merchant."
   }
 
   dimension: reply_by_date {
     type: string
     sql: ${TABLE}.reply_by_date ;;
+    description: "The merchant Reply By date that is referenced in the gateway."
   }
 
   dimension: status {
     type: string
     sql: ${TABLE}.status ;;
+    description: "The status of the dispute. "
   }
 
   dimension: transaction_id {
     type: number
-    # hidden: yes
     sql: ${TABLE}.transaction_id ;;
   }
 
@@ -53,7 +57,6 @@ view: dispute {
     drill_fields: [detail*]
   }
 
-  # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
       transaction.shipping_address_country_name,

@@ -4,6 +4,7 @@ view: dispute {
 
   dimension: amount {
     type: number
+    hidden: yes
     sql: ${TABLE}.amount ;;
   }
 
@@ -12,9 +13,10 @@ view: dispute {
     sql: ${TABLE}.kind ;;
   }
 
-  dimension: opened_date {
-    type: string
+  dimension_group: opened {
+    type: time
     sql: ${TABLE}.opened_date ;;
+    timeframes: [raw, date, month, year]
   }
 
   dimension: reason {
@@ -22,13 +24,14 @@ view: dispute {
     sql: ${TABLE}.reason ;;
   }
 
-  dimension: received_date {
-    type: string
+  dimension_group: received {
+    type: time
     sql: ${TABLE}.received_date ;;
+    timeframes: [raw, date, month, year]
   }
 
   dimension: reply_by_date {
-    type: string
+    type: date
     sql: ${TABLE}.reply_by_date ;;
   }
 
@@ -39,18 +42,25 @@ view: dispute {
 
   dimension: transaction_id {
     type: number
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}.transaction_id ;;
   }
 
   dimension: won_date {
-    type: string
+    type: date
     sql: ${TABLE}.won_date ;;
   }
 
   measure: count {
     type: count
+    label: "Number of Disputes"
     drill_fields: [detail*]
+  }
+
+  measure: total_dispute_amount {
+    type: sum
+    sql: ${amount} ;;
+    value_format_name: usd
   }
 
   # ----- Sets of fields for drilling ------

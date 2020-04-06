@@ -105,6 +105,8 @@ view: masterpass_card_details {
 
   measure: count {
     type: count
+    label: "Number of Masterpass Card Transactions"
+    value_format_name: decimal_0
     drill_fields: [detail*]
   }
 

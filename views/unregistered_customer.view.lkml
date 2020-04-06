@@ -36,7 +36,7 @@ view: unregistered_customer {
 
   dimension: transaction_id {
     type: number
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}.transaction_id ;;
   }
 
@@ -47,6 +47,8 @@ view: unregistered_customer {
 
   measure: count {
     type: count
+    label: "Number of Unregistered Customers"
+    value_format_name: decimal_0
     drill_fields: [detail*]
   }
 

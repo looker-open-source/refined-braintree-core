@@ -20,6 +20,7 @@ view: venmo_details {
   dimension: transaction_id {
     type: number
     hidden: yes
+    primary_key: yes
     sql: ${TABLE}.transaction_id ;;
   }
 
@@ -35,6 +36,7 @@ view: venmo_details {
 
   measure: count {
     type: count
+    label: "Number of Venmo Transactions"
     drill_fields: [detail*]
   }
 

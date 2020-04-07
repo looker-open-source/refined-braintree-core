@@ -20,6 +20,7 @@ view: transaction_discount_core {
 
   dimension: amount {
     type: number
+    hidden: yes
     sql: ${TABLE}.amount ;;
     description: "The discount amount."
   }
@@ -64,11 +65,13 @@ view: transaction_discount_core {
   dimension: plan_id {
     hidden: yes
     type: number
+    hidden: yes
     sql: ${TABLE}.plan_id ;;
   }
 
   dimension: quantity {
     type: number
+    hidden: yes
     sql: ${TABLE}.quantity ;;
     description: "The number of times this particular discount is applied to the subscription."
   }
@@ -76,6 +79,18 @@ view: transaction_discount_core {
   dimension: transaction_id {
     type: number
     sql: ${TABLE}.transaction_id ;;
+  }
+
+  measure: total_discount_amount {
+    type: sum
+    sql: ${amount} ;;
+    value_format_name: usd
+  }
+
+  measure: total_quantity {
+    type: sum
+    sql: ${quantity} ;;
+    value_format_name: decimal_0
   }
 
   measure: count {

@@ -336,6 +336,18 @@ view: transaction {
     value_format_name: usd
   }
 
+  measure: average_amount {
+    type: average
+    sql: ${amount} ;;
+    value_format_name: usd
+  }
+
+  measure: cumulative_total {
+    type: running_total
+    sql: ${total_amount} ;;
+    value_format_name: usd
+  }
+
   measure: total_service_fee {
     type: sum
     sql: ${service_fee_amount} ;;

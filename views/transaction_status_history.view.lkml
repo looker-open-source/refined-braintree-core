@@ -17,8 +17,19 @@ view: transaction_status_history {
     sql: ${TABLE}.status ;;
   }
 
-  dimension: timestamp {
-    type: string
+  dimension_group: date {
+    label: ""
+    type: time
+    timeframes: [raw,
+      date,
+      week,
+      month,
+      quarter,
+      year,
+      fiscal_month_num,
+      fiscal_quarter,
+      fiscal_quarter_of_year,
+      fiscal_year]
     sql: ${TABLE}.timestamp ;;
   }
 

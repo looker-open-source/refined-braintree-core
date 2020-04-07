@@ -65,7 +65,6 @@ view: transaction_discount_core {
   dimension: plan_id {
     hidden: yes
     type: number
-    hidden: yes
     sql: ${TABLE}.plan_id ;;
   }
 

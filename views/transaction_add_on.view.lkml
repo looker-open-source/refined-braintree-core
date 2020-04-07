@@ -1,4 +1,13 @@
+include: "//@{CONFIG_PROJECT_NAME}/views/transaction_add_on.view.lkml"
+
+
 view: transaction_add_on {
+  extends: [transaction_add_on_config]
+}
+
+###################################################
+
+view: transaction_add_on_core {
   sql_table_name: @{DATASET_NAME}.TRANSACTION_ADD_ON;;
   drill_fields: [id]
 
@@ -13,26 +22,32 @@ view: transaction_add_on {
     type: number
     hidden: yes
     sql: ${TABLE}.amount ;;
+    description: "The add on amount"
   }
 
   dimension: current_billing_cycle {
     type: number
     sql: ${TABLE}.current_billing_cycle ;;
+    description: "The add-on's current billing cycle. It is incremented each time the add-on is successfully applied."
   }
 
   dimension: description {
     type: string
     sql: ${TABLE}.description ;;
+    description: "A description of the add-on."
   }
 
   dimension: kind {
+    hidden: yes
     type: string
     sql: ${TABLE}.kind ;;
+    description: "The value that defines whether the modification being applied to a plan or subscription is an add-on or a discount."
   }
 
   dimension: name {
     type: string
     sql: ${TABLE}.name ;;
+    description: "The name of the add-on."
   }
 
   dimension: never_expires {
@@ -41,20 +56,24 @@ view: transaction_add_on {
   }
 
   dimension: number_of_billing_cycles {
+    hidden: yes
     type: number
     sql: ${TABLE}.number_of_billing_cycles ;;
+    description: "The number of billing cycles of the subscription."
   }
 
   dimension: plan_id {
     type: number
     hidden: yes
     sql: ${TABLE}.plan_id ;;
+    description: "The plan identifier."
   }
 
   dimension: quantity {
     type: number
     hidden: yes
     sql: ${TABLE}.quantity ;;
+    description: "The number of times this particular add-on is applied to the subscription. "
   }
 
   dimension: transaction_id {

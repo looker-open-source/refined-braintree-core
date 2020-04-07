@@ -1,4 +1,13 @@
+include: "//@{CONFIG_PROJECT_NAME}/views/transaction.view.lkml"
+
+
 view: transaction {
+  extends: [transaction_config]
+}
+
+###################################################
+
+view: transaction_core {
   sql_table_name: @{DATASET_NAME}.TRANSACTION ;;
   drill_fields: [refunded_transaction_id]
 
@@ -129,7 +138,7 @@ view: transaction {
     type: number
     sql: ${TABLE}.id ;;
     primary_key: yes
-    description: "The shipping details ID. A customer Vault record can contain up to 50 shipping and billing addresses, each with a unique ID. See the transaction API requests section for details."
+    description: "The shipping details ID. A customer Vault record can contain up to 50 shipping and billing addresses, each with a unique ID."
   }
 
   dimension: merchant_account_id {
@@ -290,7 +299,8 @@ view: transaction {
   dimension_group: created {
     type: time
     sql: ${TABLE}.created_at ;;
-    timeframes: [raw,
+    timeframes: [
+      raw,
       date,
       week,
       month,
@@ -299,13 +309,15 @@ view: transaction {
       fiscal_month_num,
       fiscal_quarter,
       fiscal_quarter_of_year,
-      fiscal_year]
+      fiscal_year
+    ]
   }
 
   dimension_group: updated {
     type: time
     sql: ${TABLE}.updated_at ;;
-    timeframes: [raw,
+    timeframes: [
+      raw,
       date,
       week,
       month,
@@ -314,7 +326,8 @@ view: transaction {
       fiscal_month_num,
       fiscal_quarter,
       fiscal_quarter_of_year,
-      fiscal_year]
+      fiscal_year
+    ]
   }
 
   measure: count {

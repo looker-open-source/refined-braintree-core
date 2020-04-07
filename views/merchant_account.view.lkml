@@ -1,4 +1,12 @@
+include: "//@{CONFIG_PROJECT_NAME}/views/merchant_account.view.lkml"
+
+
 view: merchant_account {
+  extends: [merchant_account_config]
+}
+
+###################################################
+view: merchant_account_core {
   sql_table_name: @{DATASET_NAME}.MERCHANT_ACCOUNT ;;
   drill_fields: [id]
 

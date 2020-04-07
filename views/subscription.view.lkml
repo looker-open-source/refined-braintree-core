@@ -1,4 +1,13 @@
+include: "//@{CONFIG_PROJECT_NAME}/views/subscription.view.lkml"
+
+
 view: subscription {
+  extends: [subscription_config]
+}
+
+###################################################
+
+view: subscription_core {
   sql_table_name: @{DATASET_NAME}.SUBSCRIPTION ;;
   drill_fields: [id]
 
@@ -76,6 +85,7 @@ view: subscription {
   }
 
   dimension: has_trial_period {
+    group_label: "Trial"
     type: yesno
     sql: ${TABLE}.has_trial_period ;;
   }
@@ -136,15 +146,17 @@ view: subscription {
   dimension: status {
     type: string
     sql: ${TABLE}.status ;;
-    description: "See the recurring billing overview. "
+    description: "Status of subscription."
   }
 
-  dimension: trail_duration {
+  dimension: trial_duration {
+    group_label: "Trial"
     type: number
-    sql: ${TABLE}.trail_duration ;;
+    sql: ${TABLE}.trial_duration ;;
   }
 
   dimension: trial_duration_unit {
+    group_label: "Trial"
     type: string
     sql: ${TABLE}.trial_duration_unit ;;
     description: "The trial unit specified in a plan. Specify day or month. Specifying a trial duration unit via the API will override the subscription's plan details."

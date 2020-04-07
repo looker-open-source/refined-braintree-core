@@ -55,7 +55,7 @@ explore: transaction {
     relationship: many_to_one
   }
   join: credit_card {
-    sql_on: ${transaction.id} = ${visa_checkout_details.transaction_id} ;;
+    sql_on: ${transaction.id} = ${credit_card.transaction_id} ;;
     relationship: many_to_many
   }
   join: merchant_account {
@@ -80,7 +80,6 @@ explore: transaction {
 
 
 explore: subscription {
-  sql_always_where: ${transaction.subscription_id} IS NOT NULL ;;
   join: transaction {
     sql_on: ${subscription.id} = ${transaction.subscription_id} ;;
     relationship: one_to_many
@@ -94,7 +93,7 @@ explore: subscription {
     relationship: one_to_many
   }
   join: subscription_discount {
-    sql_on: ${subscription.id} = ${subscription_discount.id} ;;
+    sql_on: ${subscription.id} = ${subscription_discount.subscription_id} ;;
     relationship: one_to_many
   }
   join: subscription_add_on {

@@ -1,5 +1,5 @@
 view: credit_card {
-  sql_table_name: `spencer-white-tckt87992.braintree.CREDIT_CARD` ;;
+  sql_table_name: @{DATASET_NAME}.CREDIT_CARD ;;
 
   dimension: address_company {
     type: string
@@ -73,7 +73,7 @@ view: credit_card {
   dimension: commercial {
     type: yesno
     sql: ${TABLE}.commercial ;;
-    description: "Whether the card type is a commercial card and is capable of processing Level 2 transactions. "
+    description: "Whether the card type is a commercial card and is capable of processing Level 2 transactions."
   }
 
   dimension: country_of_issuance {
@@ -96,7 +96,8 @@ view: credit_card {
       fiscal_month_num,
       fiscal_quarter,
       fiscal_quarter_of_year,
-      fiscal_year]
+      fiscal_year
+    ]
     description: "The date/time the object was created."
   }
 
@@ -114,7 +115,7 @@ view: credit_card {
     dimension: durbin_regulated {
     type: yesno
     sql: ${TABLE}.durbin_regulated ;;
-    description: "A value indicating whether the issuing bank's card range is regulated by the Durbin Amendment due to the bank's assets. "
+    description: "A value indicating whether the issuing bank's card range is regulated by the Durbin Amendment due to the bank's assets."
     }
 
     dimension: expiration_month {
@@ -215,7 +216,8 @@ view: credit_card {
   dimension_group: updated {
     type: time
     sql: ${TABLE}.updated_at ;;
-    timeframes: [raw,
+    timeframes: [
+      raw,
       date,
       week,
       month,
@@ -224,7 +226,8 @@ view: credit_card {
       fiscal_month_num,
       fiscal_quarter,
       fiscal_quarter_of_year,
-      fiscal_year]
+      fiscal_year
+    ]
     description: "The date/time the object was last updated."
   }
 

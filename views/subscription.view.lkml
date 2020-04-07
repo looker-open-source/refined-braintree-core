@@ -1,5 +1,5 @@
 view: subscription {
-  sql_table_name: `spencer-white-tckt87992.braintree.SUBSCRIPTION` ;;
+  sql_table_name: @{DATASET_NAME}.SUBSCRIPTION ;;
   drill_fields: [id]
 
   dimension: id {
@@ -34,7 +34,8 @@ view: subscription {
   }
 
   dimension_group: created {
-    timeframes: [raw,
+    timeframes: [
+      raw,
       date,
       week,
       month,
@@ -43,7 +44,8 @@ view: subscription {
       fiscal_month_num,
       fiscal_quarter,
       fiscal_quarter_of_year,
-      fiscal_year]
+      fiscal_year
+    ]
     type: time
     sql: ${TABLE}.created_at ;;
     description: "The date/time the object was created."
@@ -149,7 +151,8 @@ view: subscription {
   }
 
   dimension_group: updated {
-    timeframes: [raw,
+    timeframes: [
+      raw,
       date,
       week,
       month,
@@ -158,7 +161,8 @@ view: subscription {
       fiscal_month_num,
       fiscal_quarter,
       fiscal_quarter_of_year,
-      fiscal_year]
+      fiscal_year
+    ]
     type: time
     sql: ${TABLE}.updated_at ;;
     description: "The date/time the object was last updated. If a subscription has been canceled, this value will represent the date/time of cancellation."

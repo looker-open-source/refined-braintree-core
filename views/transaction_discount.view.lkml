@@ -1,5 +1,5 @@
 view: transaction_discount {
-  sql_table_name: `spencer-white-tckt87992.braintree.TRANSACTION_DISCOUNT`
+  sql_table_name: @{DATASET_NAME}.TRANSACTION_DISCOUNT
     ;;
   drill_fields: [id]
 

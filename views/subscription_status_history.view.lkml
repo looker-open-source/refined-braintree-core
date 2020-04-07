@@ -1,5 +1,5 @@
 view: subscription_status_history {
-  sql_table_name: `spencer-white-tckt87992.braintree.SUBSCRIPTION_STATUS_HISTORY`
+  sql_table_name: @{DATASET_NAME}.SUBSCRIPTION_STATUS_HISTORY
     ;;
 
   dimension: balance {

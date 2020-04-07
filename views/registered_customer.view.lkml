@@ -1,5 +1,5 @@
 view: registered_customer {
-  sql_table_name: `spencer-white-tckt87992.braintree.REGISTERED_CUSTOMER`
+  sql_table_name: @{DATASET_NAME}.REGISTERED_CUSTOMER
     ;;
   drill_fields: [id]
 
@@ -17,7 +17,8 @@ view: registered_customer {
   dimension_group: created {
     type: time
     sql: ${TABLE}.created_at ;;
-    timeframes: [raw,
+    timeframes: [
+      raw,
       date,
       week,
       month,
@@ -26,7 +27,8 @@ view: registered_customer {
       fiscal_month_num,
       fiscal_quarter,
       fiscal_quarter_of_year,
-      fiscal_year]
+      fiscal_year
+    ]
   }
 
   dimension: email {
@@ -50,7 +52,8 @@ view: registered_customer {
   }
 
   dimension_group: updated {
-    timeframes: [raw,
+    timeframes: [
+      raw,
       date,
       week,
       month,
@@ -59,7 +62,8 @@ view: registered_customer {
       fiscal_month_num,
       fiscal_quarter,
       fiscal_quarter_of_year,
-      fiscal_year]
+      fiscal_year
+    ]
     type: time
     sql: ${TABLE}.updated_at ;;
   }

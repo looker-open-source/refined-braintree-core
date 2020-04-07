@@ -1,5 +1,5 @@
 view: dispute {
-  sql_table_name: `spencer-white-tckt87992.braintree.DISPUTE` ;;
+  sql_table_name: @{DATASET_NAME}.DISPUTE ;;
 
   dimension: amount {
     type: number

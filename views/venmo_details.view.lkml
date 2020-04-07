@@ -1,5 +1,5 @@
 view: venmo_details {
-  sql_table_name: `spencer-white-tckt87992.braintree.VENMO_DETAILS` ;;
+  sql_table_name: @{DATASET_NAME}.VENMO_DETAILS ;;
 
   dimension: image_url {
     type: string

@@ -7,3 +7,11 @@ include: "*.dashboard.lookml"
 include: "//@{CONFIG_PROJECT_NAME}/views/*.view.lkml"
 include: "//@{CONFIG_PROJECT_NAME}/*.model.lkml"
 include: "//@{CONFIG_PROJECT_NAME}/*.dashboard"
+
+explore: transaction {
+  extends: [transaction_config]
+}
+
+explore: subscription {
+  extends: [subscription_config]
+}

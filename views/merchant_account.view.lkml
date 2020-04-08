@@ -18,41 +18,57 @@ view: merchant_account_core {
   }
 
   dimension: address_company {
+    group_label: "Address"
+    label: "Company"
     type: string
     sql: ${TABLE}.address_company ;;
   }
 
   dimension: address_country_name {
+    group_label: "Address"
+    label: "County Name"
     type: string
     sql: ${TABLE}.address_country_name ;;
   }
 
   dimension: address_first_name {
+    group_label: "Address"
+    label: "First Name"
     type: string
     sql: ${TABLE}.address_first_name ;;
   }
 
   dimension: address_last_name {
+    group_label: "Address"
+    label: "Last Name"
     type: string
     sql: ${TABLE}.address_last_name ;;
   }
 
   dimension: address_locality {
+    group_label: "Address"
+    label: "Locality"
     type: string
     sql: ${TABLE}.address_locality ;;
   }
 
   dimension: address_postal_code {
+    group_label: "Address"
+    label: "Postal Code"
     type: number
     sql: ${TABLE}.address_postal_code ;;
   }
 
   dimension: address_region {
+    group_label: "Address"
+    label: "Region"
     type: string
     sql: ${TABLE}.address_region ;;
   }
 
   dimension: address_street_address {
+    group_label: "Address"
+    label: "Street Address"
     type: string
     sql: ${TABLE}.address_street_address ;;
   }
@@ -82,31 +98,43 @@ view: merchant_account_core {
   }
 
   dimension: funding_details_account_number_last4 {
+    group_label: "Funding Details"
+    label: "Last 4"
     type: number
     sql: ${TABLE}.funding_details_account_number_last4 ;;
   }
 
   dimension: funding_details_descriptor {
+    group_label: "Funding Details"
+    label: "Descriptor"
     type: string
     sql: ${TABLE}.funding_details_descriptor ;;
   }
 
   dimension: funding_details_destination {
+    group_label: "Funding Details"
+    label: "Destination"
     type: string
     sql: ${TABLE}.funding_details_destination ;;
   }
 
   dimension: funding_details_email {
+    group_label: "Funding Details"
+    label: "Email"
     type: string
     sql: ${TABLE}.funding_details_email ;;
   }
 
   dimension: funding_details_mobile_phone {
+    group_label: "Funding Details"
+    label: "Mobile Phone"
     type: string
     sql: ${TABLE}.funding_details_mobile_phone ;;
   }
 
   dimension: funding_details_routing_number {
+    group_label: "Funding Details"
+    label: "Routing Number"
     type: number
     sql: ${TABLE}.funding_details_routing_number ;;
   }

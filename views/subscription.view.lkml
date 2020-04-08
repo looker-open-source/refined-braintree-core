@@ -25,20 +25,23 @@ view: subscription_core {
   }
 
   dimension: billing_day_of_month {
+    group_label: "Billing"
     type: string
     sql: ${TABLE}.billing_day_of_month ;;
     description: "The value that specifies the day of the month that the gateway will charge the subscription on every billing cycle."
   }
 
-  dimension: billing_period_end_date {
-    type: string
-    sql: ${TABLE}.billing_period_end_date ;;
+  dimension_group: billing_period_end {
+    type: time
+    timeframes: [raw, date, month, year]
+    sql: PARSE_TIMESTAMP("%F", ${TABLE}.billing_period_end_date) ;;
     description: "The end date for the current billing period, regardless of subscription status. Automatic retries on past due subscriptions do not change the start and end dates of the current billing period."
   }
 
-  dimension: billing_period_start_date {
-    type: string
-    sql: ${TABLE}.billing_period_start_date ;;
+  dimension_group: billing_period_start {
+    type: time
+    timeframes: [raw, date, month, year]
+    sql: PARSE_TIMESTAMP("%F", ${TABLE}.billing_period_start_date) ;;
     description: "The start date for the current billing period, regardless of subscription status. Automatic retries on past due subscriptions do not change the start and end dates of the current billing period."
   }
 
@@ -61,6 +64,7 @@ view: subscription_core {
   }
 
   dimension: current_billing_cycle {
+    group_label: "Billing Cycle"
     type: number
     sql: ${TABLE}.current_billing_cycle ;;
     description: "The subscription's current billing cycle. It is incremented each time the subscription passes the billing_period_end_date."
@@ -78,9 +82,10 @@ view: subscription_core {
     description: "The number of consecutive failed attempts by our recurring billing engine to charge a subscription. This count includes the transaction attempt that caused the subscription's status to become past due, starting at 0 and increasing for each failed attempt. If the subscription is active and no charge attempts failed, the count is 0."
   }
 
-  dimension: first_billing_date {
-    type: string
-    sql: ${TABLE}.first_billing_date ;;
+  dimension_group: first_billing {
+    type: time
+    timeframes: [raw, date, month, year]
+    sql: PARSE_TIMESTAMP("%F", ${TABLE}.first_billing_date) ;;
     description: "The day the subscription starts billing."
   }
 
@@ -101,27 +106,30 @@ view: subscription_core {
     sql: ${TABLE}.never_expires ;;
   }
 
-  dimension: next_billing_date {
-    type: string
-    sql: ${TABLE}.next_billing_date ;;
+  dimension_group: next_billing_date {
+    type: time
+    timeframes: [raw, date, month, year]
+    sql: PARSE_TIMESTAMP("%F",${TABLE}.next_billing_date);;
     description: "The date that the gateway will try to bill the subscription again. The gateway adjusts this date each time it tries to charge the subscription. If the subscription is past due and you have set your processing options to automatically retry failed transactions, the gateway will continue to adjust this date, advancing it based on the settings that you configured in advanced settings."
   }
 
   dimension: next_billing_period_amount {
+    group_label: "Billing"
     type: number
     sql: ${TABLE}.next_billing_period_amount ;;
     description: "The total subscription amount for the next billing period. This amount includes add-ons and discounts but does not include the current balance."
   }
 
   dimension: number_of_billing_cycles {
+    group_label: "Billing Cycle"
     type: number
     sql: ${TABLE}.number_of_billing_cycles ;;
     description: "The number of billing cycles of the subscription."
   }
 
   dimension: paid_through_date {
-    type: date
-    sql: ${TABLE}.paid_through_date ;;
+    type: string
+    sql: PARSE_TIMESTAMP("%F", ${TABLE}.paid_through_date) ;;
     description: "The date through which the subscription has been paid. It is the billing_period_end_date at the time of the last successful transaction. If the subscription is pending (has a future start date), this field is nil."
   }
 
@@ -151,12 +159,14 @@ view: subscription_core {
 
   dimension: trial_duration {
     group_label: "Trial"
+    label: "Duration"
     type: number
     sql: ${TABLE}.trial_duration ;;
   }
 
   dimension: trial_duration_unit {
     group_label: "Trial"
+    label: "Duration Unit"
     type: string
     sql: ${TABLE}.trial_duration_unit ;;
     description: "The trial unit specified in a plan. Specify day or month. Specifying a trial duration unit via the API will override the subscription's plan details."

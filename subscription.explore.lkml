@@ -4,6 +4,7 @@ explore: subscription_core {
   join: transaction {
     sql_on: ${subscription.id} = ${transaction.subscription_id} ;;
     relationship: one_to_many
+    fields: [ALL_FIELDS*, -transaction.tender]
   }
   join: registered_customer {
     sql_on: ${transaction.customer_id} = ${registered_customer.id};;

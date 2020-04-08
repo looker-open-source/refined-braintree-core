@@ -134,10 +134,25 @@ view: credit_card_core {
   }
 
   dimension: expiration_year {
-    type: string
+    type: number
     group_label: "Credit Card Details"
     sql: ${TABLE}.expiration_year ;;
     description: "The two or four digit year associated with a credit card, formatted YYYY or YY. May be used with expiration_month, and instead of expiration_date."
+  }
+  dimension_group: expiration_timestamp {
+    type: time
+    timeframes: [raw, date, month, year]
+    sql:
+    PARSE_TIMESTAMP(
+      "%F"
+      ,CONCAT(
+        IF(CHAR_LENGTH(CAST(${expiration_year} as STRING)) < 4, CONCAT("20",${expiration_year}), ${expiration_year})
+        ,"-", ${expiration_month}
+        ,"-01"
+      )
+    )
+
+      ;;
   }
 
   dimension: healthcare {

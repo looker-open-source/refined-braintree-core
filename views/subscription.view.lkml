@@ -25,7 +25,6 @@ view: subscription_core {
   }
 
   dimension: billing_day_of_month {
-    group_label: "Billing"
     type: string
     sql: ${TABLE}.billing_day_of_month ;;
     description: "The value that specifies the day of the month that the gateway will charge the subscription on every billing cycle."
@@ -107,7 +106,7 @@ view: subscription_core {
     sql: ${TABLE}.never_expires ;;
   }
 
-  dimension_group: next_billing_date {
+  dimension_group: next_billing {
     type: time
     timeframes: [raw, date, month, year]
     sql: PARSE_TIMESTAMP("%F",${TABLE}.next_billing_date);;
@@ -128,8 +127,9 @@ view: subscription_core {
     description: "The number of billing cycles of the subscription."
   }
 
-  dimension: paid_through_date {
-    type: string
+  dimension_group: paid_through {
+    type: time
+    timeframes: [raw, date, month, year]
     sql: PARSE_TIMESTAMP("%F", ${TABLE}.paid_through_date) ;;
     description: "The date through which the subscription has been paid. It is the billing_period_end_date at the time of the last successful transaction. If the subscription is pending (has a future start date), this field is nil."
   }
@@ -198,6 +198,12 @@ view: subscription_core {
     drill_fields: [detail*]
   }
 
+  measure: total_balance {
+    type: sum
+    sql: ${balance} ;;
+    value_format_name: usd
+    drill_fields: [detail*]
+  }
 
   set: detail {
     fields: [

@@ -68,4 +68,10 @@ view: subscription_status_history_core {
     type: count
     drill_fields: [subscription.id]
   }
+
+  measure: total_balance {
+    type: sum
+    sql: ${balance} ;;
+    value_format_name: usd
+  }
 }

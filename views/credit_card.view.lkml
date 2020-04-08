@@ -126,33 +126,42 @@ view: credit_card_core {
     description: "A value indicating whether the issuing bank's card range is regulated by the Durbin Amendment due to the bank's assets."
     }
 
-    dimension: expiration_month {
+    dimension: expiration_month_raw {
+    hidden: yes
     type: string
     group_label: "Credit Card Details"
     sql: ${TABLE}.expiration_month ;;
     description: "The expiration month of a credit card, formatted MM. May be used with expiration_year, and instead of expiration_date."
   }
 
-  dimension: expiration_year {
-    type: number
+  dimension: expiration_year_raw {
+    hidden: yes
+    type: string
     group_label: "Credit Card Details"
     sql: ${TABLE}.expiration_year ;;
     description: "The two or four digit year associated with a credit card, formatted YYYY or YY. May be used with expiration_month, and instead of expiration_date."
   }
-  dimension_group: expiration_timestamp {
+
+  dimension_group: expiration {
     type: time
-    timeframes: [raw, date, month, year]
+    timeframes: [raw, month, year]
     sql:
     PARSE_TIMESTAMP(
       "%F"
       ,CONCAT(
-        IF(CHAR_LENGTH(CAST(${expiration_year} as STRING)) < 4, CONCAT("20",${expiration_year}), ${expiration_year})
-        ,"-", ${expiration_month}
+        IF(CHAR_LENGTH(${expiration_year_raw}) < 4, CONCAT("20",${expiration_year_raw}), ${expiration_year_raw})
+        ,"-", ${expiration_month_raw}
         ,"-01"
       )
     )
-
       ;;
+  }
+
+  dimension_group: _until_expiration {
+    type: duration
+    sql_start: ${transaction.today_raw} ;;
+    sql_end: ${expiration_raw} ;;
+    intervals: [day, month]
   }
 
   dimension: healthcare {

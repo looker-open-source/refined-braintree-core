@@ -365,6 +365,24 @@ view: transaction_core {
       fiscal_year]
   }
 
+  dimension_group: today {
+    hidden: yes
+    type: time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year,
+      fiscal_month_num,
+      fiscal_quarter,
+      fiscal_quarter_of_year,
+      fiscal_year
+    ]
+    sql: CURRENT_TIMESTAMP() ;;
+  }
+
   dimension: tender {
     type: string
     sql: CASE

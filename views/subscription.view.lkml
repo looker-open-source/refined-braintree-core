@@ -13,7 +13,7 @@ view: subscription_core {
 
   dimension: id {
     primary_key: yes
-    type: number
+    #type: number
     sql: ${TABLE}.id ;;
     description: "The string value representing a specific subscription in the Vault. Length and format of gateway-generated tokens and IDs may change at any time."
   }
@@ -77,6 +77,7 @@ view: subscription_core {
   }
 
   dimension: failure_count {
+    hidden: yes
     type: number
     sql: ${TABLE}.failure_count ;;
     description: "The number of consecutive failed attempts by our recurring billing engine to charge a subscription. This count includes the transaction attempt that caused the subscription's status to become past due, starting at 0 and increasing for each failed attempt. If the subscription is active and no charge attempts failed, the count is 0."
@@ -196,6 +197,7 @@ view: subscription_core {
     value_format_name: decimal_0
     drill_fields: [detail*]
   }
+
 
   set: detail {
     fields: [

@@ -97,10 +97,11 @@ view: transaction_core {
     sql: ${TABLE}.customer_id ;;
   }
 
-  dimension: disbursement_date {
+  dimension_group: disbursement_date {
     group_label: "Disbursement"
-    type: string
-    sql: ${TABLE}.disbursement_date ;;
+    type: time
+    timeframes: [raw, date, month]
+    sql: PARSE_TIMESTAMP("%F", ${TABLE}.disbursement_date) ;;
     description: "The date that the funds associated with this transaction were disbursed. This attribute is only available if you have an eligible merchant account."
   }
 
@@ -296,7 +297,6 @@ view: transaction_core {
   dimension: status {
     type: string
     sql: ${TABLE}.status ;;
-    description: "The 3D Secure status value. For a list of all possible statuses and their liability shifts, see the 3D Secure guide."
   }
 
   dimension: subscription_id {

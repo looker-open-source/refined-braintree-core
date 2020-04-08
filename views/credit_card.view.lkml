@@ -143,7 +143,7 @@ view: credit_card_core {
   dimension: healthcare {
     type: yesno
     sql: ${TABLE}.healthcare ;;
-    description: "Whether the card is a healthcare card. "
+    description: "Whether the card is a healthcare card."
   }
 
   dimension: image_url {

@@ -24,7 +24,7 @@ view: dispute_core {
 
   dimension_group: opened {
     type: time
-    sql: ${TABLE}.opened_date ;;
+    sql: PARSE_TIMESTAMP("%F", ${TABLE}.opened_date) ;;
     timeframes: [raw,
       date,
       week,

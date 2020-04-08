@@ -291,6 +291,8 @@ view: transaction {
     type: time
     sql: ${TABLE}.created_at ;;
     timeframes: [raw,
+      day_of_week,
+      hour_of_day,
       date,
       week,
       month,
@@ -315,6 +317,19 @@ view: transaction {
       fiscal_quarter,
       fiscal_quarter_of_year,
       fiscal_year]
+  }
+
+  dimension: tender {
+    type: string
+    sql: CASE
+          WHEN ${credit_card.transaction_id} IS NOT NULL THEN 'Credit Card'
+           WHEN ${masterpass_card_details.transaction_id} IS NOT NULL THEN 'MasterPass card'
+           WHEN ${paypal_details.transaction_id} IS NOT NULL THEN 'Paypal'
+           WHEN ${venmo_details.transaction_id} IS NOT NULL THEN 'Venmo'
+           WHEN ${visa_checkout_details.transaction_id} IS NOT NULL THEN 'Visa Checkout'
+           WHEN ${apple_pay_card.transaction_id} IS NOT NULL THEN 'Apple Pay'
+          WHEN ${android_pay_details.transaction_id} IS NOT NULL THEN 'Android Pay'
+          ELSE 'Other' END;;
   }
 
   measure: count {

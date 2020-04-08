@@ -88,6 +88,12 @@ view: transaction_add_on {
     value_format_name: decimal_1
   }
 
+  measure: average_add_on_amount {
+    type: average
+    sql: ${amount} ;;
+    value_format_name: decimal_1
+  }
+
   # ----- Sets of fields for drilling ------
   set: detail {
     fields: [

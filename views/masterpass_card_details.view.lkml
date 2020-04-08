@@ -1,4 +1,12 @@
+include: "//@{CONFIG_PROJECT_NAME}/views/masterpass_card_details.view.lkml"
+
+
 view: masterpass_card_details {
+  extends: [masterpass_card_details_config]
+}
+
+###################################################
+view: masterpass_card_details_core {
   sql_table_name: @{DATASET_NAME}.MASTERPASS_CARD_DETAILS ;;
 
   dimension: bin {

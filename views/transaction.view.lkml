@@ -1,4 +1,13 @@
+include: "//@{CONFIG_PROJECT_NAME}/views/transaction.view.lkml"
+
+
 view: transaction {
+  extends: [transaction_config]
+}
+
+###################################################
+
+view: transaction_core {
   sql_table_name: @{DATASET_NAME}.TRANSACTION ;;
   drill_fields: [refunded_transaction_id]
 
@@ -129,7 +138,7 @@ view: transaction {
     type: number
     sql: ${TABLE}.id ;;
     primary_key: yes
-    description: "The shipping details ID. A customer Vault record can contain up to 50 shipping and billing addresses, each with a unique ID. See the transaction API requests section for details."
+    description: "The shipping details ID. A customer Vault record can contain up to 50 shipping and billing addresses, each with a unique ID."
   }
 
   dimension: merchant_account_id {
@@ -159,9 +168,34 @@ view: transaction {
   }
 
   dimension: processor_authorization_code {
+    group_label: "Processor Authorization"
     type: number
     sql: ${TABLE}.processor_authorization_code ;;
     description: "The authorization code returned by the processor."
+  }
+
+#https://developers.braintreepayments.com/reference/general/processor-responses/authorization-responses
+  dimension: processor_authorization_type  {
+    group_label: "Processor Authorization"
+    case: {
+      when: {
+        sql: ${processor_authorization_code} < 2000 ;;
+        label: "Approved"
+      }
+      when: {
+        sql: ${processor_authorization_code} IN (
+                2000,2001,2002,2003,
+                2016,2025,2026,2034,
+                2035,2038,2040,2042,
+                2046,2048,2057,2062,
+                2092,2099
+              )
+              OR ${processor_authorization_code} >= 2101 AND ${processor_authorization_code} <= 3000
+        ;;
+        label: "Soft Decline"
+      }
+      else: "Hard Decline"
+    }
   }
 
   dimension: purchase_order_number {
@@ -179,12 +213,14 @@ view: transaction {
   dimension: risk_data_decision {
     type: string
     sql: ${TABLE}.risk_data_decision ;;
+    description: "The risk decision."
   }
 
   dimension: risk_data_id {
     type: number
     hidden: yes
     sql: ${TABLE}.risk_data_id ;;
+    description: "The risk data identifier."
   }
 
   dimension: service_fee_amount {
@@ -203,49 +239,57 @@ view: transaction {
 
   dimension: shipping_address_company {
     type: string
-    group_label: "Shipping"
+    group_label: "Shipping Address"
+    label: "Company"
     sql: ${TABLE}.shipping_address_company ;;
   }
 
   dimension: shipping_address_country_name {
     type: string
-    group_label: "Shipping"
+    group_label: "Shipping Address"
+    label: "Country Name"
     sql: ${TABLE}.shipping_address_country_name ;;
   }
 
   dimension: shipping_address_first_name {
     type: string
-    group_label: "Shipping"
+    group_label: "Shipping Address"
+    label: "First Name"
     sql: ${TABLE}.shipping_address_first_name ;;
   }
 
   dimension: shipping_address_last_name {
     type: string
-    group_label: "Shipping"
+    group_label: "Shipping Address"
+    label: "Last Name"
     sql: ${TABLE}.shipping_address_last_name ;;
   }
 
   dimension: shipping_address_locality {
     type: string
-    group_label: "Shipping"
+    group_label: "Shipping Address"
+    label: "Locality"
     sql: ${TABLE}.shipping_address_locality ;;
   }
 
   dimension: shipping_address_postal_code {
     type: zipcode
-    group_label: "Shipping"
+    group_label: "Shipping Address"
+    label: "Postal Code"
     sql: ${TABLE}.shipping_address_postal_code ;;
   }
 
   dimension: shipping_address_region {
     type: string
-    group_label: "Shipping"
+    group_label: "Shipping Address"
+    label: "Region"
     sql: ${TABLE}.shipping_address_region ;;
   }
 
   dimension: shipping_address_street_address {
     type: string
-    group_label: "Shipping"
+    group_label: "Shipping Address"
+    label: "Street Address"
     sql: ${TABLE}.shipping_address_street_address ;;
   }
 
@@ -301,13 +345,15 @@ view: transaction {
       fiscal_month_num,
       fiscal_quarter,
       fiscal_quarter_of_year,
-      fiscal_year]
+      fiscal_year
+    ]
   }
 
   dimension_group: updated {
     type: time
     sql: ${TABLE}.updated_at ;;
-    timeframes: [raw,
+    timeframes: [
+      raw,
       date,
       week,
       month,

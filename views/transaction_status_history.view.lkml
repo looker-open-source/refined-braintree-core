@@ -1,4 +1,13 @@
-view: transaction_status_history {
+include: "//@{CONFIG_PROJECT_NAME}/views/transaction_status_history.view.lkml"
+
+
+view: transaction_status_history{
+  extends: [transaction_status_history_config]
+}
+
+###################################################
+
+view: transaction_status_history_core {
   sql_table_name: @{DATASET_NAME}.TRANSACTION_STATUS_HISTORY
     ;;
 
@@ -10,17 +19,19 @@ view: transaction_status_history {
   dimension: source {
     type: string
     sql: ${TABLE}.source ;;
+    description: "How a transaction was created"
   }
 
   dimension: status {
     type: string
     sql: ${TABLE}.status ;;
+    description: "A record of the statuses that a transaction has progressed through."
   }
 
-  dimension_group: date {
-    label: ""
+  dimension_group: timestamp {
     type: time
-    timeframes: [raw,
+    timeframes: [
+      raw,
       date,
       week,
       month,
@@ -29,7 +40,8 @@ view: transaction_status_history {
       fiscal_month_num,
       fiscal_quarter,
       fiscal_quarter_of_year,
-      fiscal_year]
+      fiscal_year
+    ]
     sql: ${TABLE}.timestamp ;;
   }
 
@@ -42,6 +54,7 @@ view: transaction_status_history {
   dimension: user {
     type: string
     sql: ${TABLE}.user ;;
+    description: "The Braintree Control Panel username of the person who performed an action that triggered the status change of the transaction."
   }
 
   measure: count {

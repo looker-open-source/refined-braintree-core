@@ -1,21 +1,32 @@
+include: "//@{CONFIG_PROJECT_NAME}/views/paypal_details.view.lkml"
+
+
 view: paypal_details {
+  extends: [paypal_details_config]
+}
+
+###################################################
+view: paypal_details_core {
   sql_table_name: @{DATASET_NAME}.PAYPAL_DETAILS ;;
 
   dimension: authorization_id {
     type: number
     hidden: yes
     sql: ${TABLE}.authorization_id ;;
+    description: "The identification value of the authorization within PayPal's API."
   }
 
   dimension: capture_id {
     type: number
     hidden: yes
     sql: ${TABLE}.capture_id ;;
+    description: "PayPal id for a transaction."
   }
 
   dimension: custom_field {
     type: string
     sql: ${TABLE}.custom_field ;;
+    description: "Custom field/value pairs."
   }
 
   dimension: debug_id {
@@ -75,17 +86,20 @@ view: paypal_details {
     type: number
     hidden: yes
     sql: ${TABLE}.payment_id ;;
+    description: "The identification value of the payment within PayPal's API."
   }
 
   dimension: refund_id {
     type: number
     hidden: yes
     sql: ${TABLE}.refund_id ;;
+    description: "PayPal id for a refund."
   }
 
   dimension: seller_protection_status {
     type: string
     sql: ${TABLE}.seller_protection_status ;;
+    description: "Indicates whether a transaction qualifies for PayPal Seller Protection."
   }
 
   dimension: token {
@@ -96,13 +110,14 @@ view: paypal_details {
 
   dimension: transaction_fee_amount {
     type: number
-    hidden: yes
     sql: ${TABLE}.transaction_fee_amount ;;
+    description: "The transaction fee amount of the PayPal transaction."
   }
 
   dimension: transaction_fee_currency_iso_code {
     type: string
     sql: ${TABLE}.transaction_fee_currency_iso_code ;;
+    description: "The currency of the associated transaction fee."
   }
 
   dimension: transaction_id {

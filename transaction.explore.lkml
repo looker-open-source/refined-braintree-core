@@ -15,7 +15,7 @@ explore: transaction_core {
   }
   join: dispute {
     sql_on: ${transaction.id} = ${dispute.transaction_id} ;;
-    relationship: one_to_many
+    relationship: one_to_one
   }
   join: transaction_status_history {
     sql_on: ${transaction.id} = ${transaction_status_history.transaction_id} ;;

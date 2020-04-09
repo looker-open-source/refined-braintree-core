@@ -247,6 +247,7 @@ view: transaction_core {
 
   dimension: shipping_address_country_name {
     type: string
+    map_layer_name: countries
     group_label: "Shipping Address"
     label: "Country Name"
     sql: ${TABLE}.shipping_address_country_name ;;
@@ -416,6 +417,7 @@ view: transaction_core {
   }
 
   measure: average_amount {
+    label: "Average Transaction"
     type: average
     sql: ${amount} ;;
     value_format_name: usd

@@ -247,6 +247,7 @@ view: transaction_core {
 
   dimension: shipping_address_country_name {
     type: string
+    map_layer_name: countries
     group_label: "Shipping Address"
     label: "Country Name"
     sql: ${TABLE}.shipping_address_country_name ;;
@@ -398,6 +399,22 @@ view: transaction_core {
           ELSE 'Other' END;;
   }
 
+  dimension: tender_display {
+    type: string
+    sql: CASE
+          WHEN ${transaction.payment_instrument_type} = "credit_card" THEN 'Credit Card'
+           WHEN ${transaction.payment_instrument_type} = "masterpass_card" THEN 'MasterPass card'
+           WHEN ${transaction.payment_instrument_type} = "paypal_here" THEN 'Paypal'
+           WHEN ${transaction.payment_instrument_type} = "paypal_account" THEN 'Paypal'
+           WHEN ${transaction.payment_instrument_type} = "venmo_account" THEN 'Venmo'
+           WHEN ${transaction.payment_instrument_type} = "visa_checkout_card" THEN 'Visa Checkout'
+           WHEN ${transaction.payment_instrument_type} = "apple_pay_card" THEN 'Apple Pay'
+           WHEN ${transaction.payment_instrument_type} = "android_pay_card" THEN 'Android Pay'
+           WHEN ${transaction.payment_instrument_type} = "samsung_pay_card" THEN 'Samsung Pay'
+           WHEN ${transaction.payment_instrument_type} = "us_bank_account" THEN 'US Bank'
+          ELSE 'Other' END;;
+  }
+
   measure: count {
     type: count
     label: "Number of Transactions"
@@ -439,6 +456,7 @@ view: transaction_core {
   }
 
   measure: average_amount {
+    label: "Average Transaction"
     type: average
     sql: ${amount} ;;
     value_format_name: usd

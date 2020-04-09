@@ -339,6 +339,7 @@ view: transaction_core {
       hour_of_day,
       date,
       week,
+      week_of_year,
       month,
       quarter,
       year,
@@ -372,6 +373,7 @@ view: transaction_core {
       raw,
       date,
       week,
+      week_of_year,
       month,
       quarter,
       year,
@@ -403,6 +405,17 @@ view: transaction_core {
     value_format_name: decimal_0
   }
 
+  measure: count_declines {
+    type: count
+    label: "Number of Declines"
+    drill_fields: [detail*]
+    value_format_name: decimal_0
+    filters: {
+      field: processor_authorization_type
+      value: "-Approved"
+    }
+  }
+
   measure: total_tax {
     type: sum
     sql: ${tax_amount} ;;
@@ -413,6 +426,16 @@ view: transaction_core {
     type: sum
     sql: ${amount} ;;
     value_format_name: usd
+  }
+
+  measure: amount_of_decline {
+    type: sum
+    sql: ${amount} ;;
+    value_format_name: usd
+    filters: {
+      field: processor_authorization_type
+      value: "-Approved"
+    }
   }
 
   measure: average_amount {

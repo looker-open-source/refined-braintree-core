@@ -28,6 +28,7 @@ view: dispute_core {
     timeframes: [raw,
       date,
       week,
+      week_of_year,
       month,
       quarter,
       year,
@@ -59,10 +60,19 @@ view: dispute_core {
     description: "The date the dispute was received by the merchant."
   }
 
-  dimension: reply_by_date {
-    type: date
-    sql: ${TABLE}.reply_by_date ;;
+  dimension_group: reply_by {
+    type: time
+    timeframes: [raw, date, month, year]
+    sql: PARSE_TIMESTAMP("%F", ${TABLE}.reply_by_date) ;;
     description: "The merchant Reply By date that is referenced in the gateway."
+  }
+
+  dimension_group: to_reply {
+    type: duration
+    intervals: [day, month]
+    sql_start: ${transaction.today_raw} ;;
+    sql_end: ${reply_by_raw} ;;
+    description: "Time between a dispute's open date and reply by date"
   }
 
   dimension: status {

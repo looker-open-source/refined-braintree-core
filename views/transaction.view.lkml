@@ -428,8 +428,8 @@ view: transaction_core {
     drill_fields: [detail*]
     value_format_name: decimal_0
     filters: {
-      field: processor_authorization_type
-      value: "-Approved"
+      field: status
+      value: "SettlementDeclined,GatewayRejected,AuthorizationExpired,ProcessorDeclined,Failed"
     }
   }
 
@@ -450,8 +450,8 @@ view: transaction_core {
     sql: ${amount} ;;
     value_format_name: usd
     filters: {
-      field: processor_authorization_type
-      value: "-Approved"
+      field: status
+      value: "SettlementDeclined,GatewayRejected,AuthorizationExpired,ProcessorDeclined,Failed"
     }
   }
 

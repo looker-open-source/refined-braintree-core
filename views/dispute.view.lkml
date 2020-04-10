@@ -87,9 +87,10 @@ view: dispute_core {
     sql: ${TABLE}.transaction_id ;;
   }
 
-  dimension: won_date {
-    type: date
-    sql: ${TABLE}.won_date ;;
+  dimension_group: won {
+    type: time
+    timeframes: [raw, date, month, year]
+    sql: PARSE_TIMESTAMP("%F", ${TABLE}.won_date) ;;
   }
 
   measure: count {

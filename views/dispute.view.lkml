@@ -136,3 +136,23 @@ view: dispute_core {
     ]
   }
 }
+
+
+view: dispute_ndt {
+  derived_table: {
+    explore_source: transaction {
+      column: count { field: dispute.count }
+      column: reason_label { field: dispute.reason_label }
+      filters: {
+        field: dispute.reason_label
+        value: "-NULL"
+      }
+    }
+  }
+  dimension: count {
+    hidden: yes
+    label: "Dispute Number of Disputes"
+    type: number
+  }
+  dimension: reason_label {hidden:yes}
+}

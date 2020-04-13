@@ -415,6 +415,11 @@ view: transaction_core {
           ELSE 'Other' END;;
   }
 
+  dimension: denied {
+    type: yesno
+    sql: ${status} IN ("SettlementDeclined","GatewayRejected","AuthorizationExpired","ProcessorDeclined","Failed") ;;
+  }
+
   measure: count {
     type: count
     label: "Number of Transactions"
@@ -428,8 +433,8 @@ view: transaction_core {
     drill_fields: [detail*]
     value_format_name: decimal_0
     filters: {
-      field: status
-      value: "SettlementDeclined,GatewayRejected,AuthorizationExpired,ProcessorDeclined,Failed"
+      field: denied
+      value: "yes"
     }
   }
 
@@ -450,8 +455,8 @@ view: transaction_core {
     sql: ${amount} ;;
     value_format_name: usd
     filters: {
-      field: status
-      value: "SettlementDeclined,GatewayRejected,AuthorizationExpired,ProcessorDeclined,Failed"
+      field: denied
+      value: "yes"
     }
   }
 
@@ -476,7 +481,7 @@ view: transaction_core {
 
   set: detail {
     fields: [
-      refunded_transaction_id,
+      id,
       shipping_address_country_name,
       billing_address_country_name,
       shipping_address_first_name,

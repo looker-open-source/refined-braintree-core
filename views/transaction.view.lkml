@@ -418,7 +418,7 @@ view: transaction_core {
   measure: count {
     type: count
     label: "Number of Transactions"
-    drill_fields: [detail*]
+    drill_fields: [id, customer_id, created_date, amount]
     value_format_name: decimal_0
   }
 
@@ -441,6 +441,7 @@ view: transaction_core {
 
   measure: total_amount {
     type: sum
+    drill_fields: [id, customer_id, created_date, amount]
     sql: ${amount} ;;
     value_format_name: usd
   }
@@ -457,6 +458,7 @@ view: transaction_core {
 
   measure: average_amount {
     label: "Average Transaction"
+    drill_fields: [id, customer_id, created_date, amount]
     type: average
     sql: ${amount} ;;
     value_format_name: usd

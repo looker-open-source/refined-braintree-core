@@ -431,6 +431,7 @@ view: transaction_core {
 
   measure: count_declines {
     type: count
+    group_label: "Declined Transactions"
     label: "Number of Declines"
     drill_fields: [detail*]
     value_format_name: decimal_0
@@ -454,6 +455,8 @@ view: transaction_core {
   }
 
   measure: amount_of_decline {
+    group_label: "Declined Transactions"
+    label: "Declined Transaction Amount"
     type: sum
     sql: ${amount} ;;
     value_format_name: usd

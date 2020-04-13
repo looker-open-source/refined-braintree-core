@@ -82,6 +82,7 @@ view: dispute_core {
   }
 
   dimension: transaction_id {
+    primary_key: yes
     type: number
     hidden: yes
     sql: ${TABLE}.transaction_id ;;

@@ -44,6 +44,23 @@ view: dispute_core {
     description: "The reason the dispute was created. "
   }
 
+  dimension: reason_label {
+    type: string
+    sql:
+    CASE WHEN ${reason} = "cancelled_recurring_transaction" THEN "Canceled Recurring Transaction"
+         WHEN ${reason} = "credit_not_processed" THEN "Credit Not Processed"
+         WHEN ${reason} = "duplicate" THEN "Duplicate"
+         WHEN ${reason} = "fraud" THEN "Fraud"
+         WHEN ${reason} = "general" THEN "General"
+         WHEN ${reason} = "invalid_account" THEN "Invalid Account"
+         WHEN ${reason} = "not_recognized" THEN "Not Recognized"
+         WHEN ${reason} = "product_not_received" THEN "Product Not Received"
+         WHEN ${reason} = "product_unsatisfactory" THEN "Product Unsatisfactory"
+         WHEN ${reason} = "transaction_amount_differs" THEN "Transaction Amount Differs"
+         ELSE NULL END
+        ;;
+  }
+
   dimension_group: received {
     type: time
     sql: ${TABLE}.received_date ;;

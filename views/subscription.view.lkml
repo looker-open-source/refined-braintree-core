@@ -52,6 +52,7 @@ view: subscription_core {
       month,
       quarter,
       year,
+      day_of_month,
       fiscal_month_num,
       fiscal_quarter,
       fiscal_quarter_of_year,

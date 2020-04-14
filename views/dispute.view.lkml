@@ -1,12 +1,4 @@
-include: "//@{CONFIG_PROJECT_NAME}/views/dispute.view.lkml"
-
-
 view: dispute {
-  extends: [dispute_config]
-}
-
-###################################################
-view: dispute_core {
   sql_table_name: @{DATASET_NAME}.DISPUTE ;;
 
   dimension: amount {
@@ -22,22 +14,6 @@ view: dispute_core {
     description: "The kind of dispute. "
   }
 
-  dimension_group: opened {
-    type: time
-    sql: PARSE_TIMESTAMP("%F", ${TABLE}.opened_date) ;;
-    timeframes: [raw,
-      date,
-      week,
-      week_of_year,
-      month,
-      quarter,
-      year,
-      fiscal_month_num,
-      fiscal_quarter,
-      fiscal_quarter_of_year,
-      fiscal_year]
-  }
-
   dimension: reason {
     type: string
     sql: ${TABLE}.reason ;;
@@ -46,8 +22,7 @@ view: dispute_core {
 
   dimension: reason_display {
     type: string
-    sql:
-    CASE WHEN ${reason} = "cancelled_recurring_transaction" THEN "Canceled Recurring Transaction"
+    sql: CASE WHEN ${reason} = "cancelled_recurring_transaction" THEN "Canceled Recurring Transaction"
          WHEN ${reason} = "credit_not_processed" THEN "Credit Not Processed"
          WHEN ${reason} = "duplicate" THEN "Duplicate"
          WHEN ${reason} = "fraud" THEN "Fraud"
@@ -57,14 +32,45 @@ view: dispute_core {
          WHEN ${reason} = "product_not_received" THEN "Product Not Received"
          WHEN ${reason} = "product_unsatisfactory" THEN "Product Unsatisfactory"
          WHEN ${reason} = "transaction_amount_differs" THEN "Transaction Amount Differs"
-         ELSE NULL END
-        ;;
+         ELSE NULL END ;;
+  }
+
+  dimension: status {
+    type: string
+    sql: ${TABLE}.status ;;
+    description: "The status of the dispute. "
+  }
+
+  dimension: transaction_id {
+    primary_key: yes
+    type: number
+    hidden: yes
+    sql: ${TABLE}.transaction_id ;;
+  }
+
+  dimension_group: opened {
+    type: time
+    sql: PARSE_TIMESTAMP("%F", ${TABLE}.opened_date) ;;
+    timeframes: [
+      raw,
+      date,
+      week,
+      week_of_year,
+      month,
+      quarter,
+      year,
+      fiscal_month_num,
+      fiscal_quarter,
+      fiscal_quarter_of_year,
+      fiscal_year
+    ]
   }
 
   dimension_group: received {
     type: time
     sql: ${TABLE}.received_date ;;
-    timeframes: [raw,
+    timeframes: [
+      raw,
       date,
       week,
       month,
@@ -73,7 +79,8 @@ view: dispute_core {
       fiscal_month_num,
       fiscal_quarter,
       fiscal_quarter_of_year,
-      fiscal_year]
+      fiscal_year
+    ]
     description: "The date the dispute was received by the merchant."
   }
 
@@ -90,19 +97,6 @@ view: dispute_core {
     sql_start: ${transaction.today_raw} ;;
     sql_end: ${reply_by_raw} ;;
     description: "Time between a dispute's open date and reply by date"
-  }
-
-  dimension: status {
-    type: string
-    sql: ${TABLE}.status ;;
-    description: "The status of the dispute. "
-  }
-
-  dimension: transaction_id {
-    primary_key: yes
-    type: number
-    hidden: yes
-    sql: ${TABLE}.transaction_id ;;
   }
 
   dimension_group: won {
@@ -123,7 +117,6 @@ view: dispute_core {
     value_format_name: usd
   }
 
-  # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
       transaction.shipping_address_country_name,
@@ -137,22 +130,31 @@ view: dispute_core {
   }
 }
 
-
 view: dispute_ndt {
   derived_table: {
     explore_source: transaction {
-      column: count { field: dispute.count }
-      column: reason_label { field: dispute.reason_display }
+      column: count {
+        field: dispute.count
+      }
+
+      column: reason_label {
+        field: dispute.reason_display
+      }
+
       filters: {
         field: dispute.reason_display
         value: "-NULL"
       }
     }
   }
+
   dimension: count {
     hidden: yes
     label: "Dispute Number of Disputes"
     type: number
   }
-  dimension: reason_display {hidden:yes}
+
+  dimension: reason_display {
+    hidden: yes
+  }
 }

@@ -1,19 +1,9 @@
-include: "//@{CONFIG_PROJECT_NAME}/views/subscription.view.lkml"
-
-
 view: subscription {
-  extends: [subscription_config]
-}
-
-###################################################
-
-view: subscription_core {
   sql_table_name: @{DATASET_NAME}.SUBSCRIPTION ;;
   drill_fields: [id]
 
   dimension: id {
     primary_key: yes
-    #type: number
     sql: ${TABLE}.id ;;
     description: "The string value representing a specific subscription in the Vault. Length and format of gateway-generated tokens and IDs may change at any time."
   }
@@ -28,39 +18,6 @@ view: subscription_core {
     type: string
     sql: ${TABLE}.billing_day_of_month ;;
     description: "The value that specifies the day of the month that the gateway will charge the subscription on every billing cycle."
-  }
-
-  dimension_group: billing_period_end {
-    type: time
-    timeframes: [raw, date, month, year]
-    sql: PARSE_TIMESTAMP("%F", ${TABLE}.billing_period_end_date) ;;
-    description: "The end date for the current billing period, regardless of subscription status. Automatic retries on past due subscriptions do not change the start and end dates of the current billing period."
-  }
-
-  dimension_group: billing_period_start {
-    type: time
-    timeframes: [raw, date, month, year]
-    sql: PARSE_TIMESTAMP("%F", ${TABLE}.billing_period_start_date) ;;
-    description: "The start date for the current billing period, regardless of subscription status. Automatic retries on past due subscriptions do not change the start and end dates of the current billing period."
-  }
-
-  dimension_group: created {
-    timeframes: [
-      raw,
-      date,
-      week,
-      month,
-      quarter,
-      year,
-      day_of_month,
-      fiscal_month_num,
-      fiscal_quarter,
-      fiscal_quarter_of_year,
-      fiscal_year
-    ]
-    type: time
-    sql: ${TABLE}.created_at ;;
-    description: "The date/time the object was created."
   }
 
   dimension: current_billing_cycle {
@@ -83,13 +40,6 @@ view: subscription_core {
     description: "The number of consecutive failed attempts by our recurring billing engine to charge a subscription. This count includes the transaction attempt that caused the subscription's status to become past due, starting at 0 and increasing for each failed attempt. If the subscription is active and no charge attempts failed, the count is 0."
   }
 
-  dimension_group: first_billing {
-    type: time
-    timeframes: [raw, date, month, year]
-    sql: PARSE_TIMESTAMP("%F", ${TABLE}.first_billing_date) ;;
-    description: "The day the subscription starts billing."
-  }
-
   dimension: has_trial_period {
     group_label: "Trial"
     type: yesno
@@ -107,13 +57,6 @@ view: subscription_core {
     sql: ${TABLE}.never_expires ;;
   }
 
-  dimension_group: next_billing {
-    type: time
-    timeframes: [raw, date, month, year]
-    sql: PARSE_TIMESTAMP("%F",${TABLE}.next_billing_date);;
-    description: "The date that the gateway will try to bill the subscription again. The gateway adjusts this date each time it tries to charge the subscription. If the subscription is past due and you have set your processing options to automatically retry failed transactions, the gateway will continue to adjust this date, advancing it based on the settings that you configured in advanced settings."
-  }
-
   dimension: next_billing_period_amount {
     group_label: "Billing"
     type: number
@@ -126,13 +69,6 @@ view: subscription_core {
     type: number
     sql: ${TABLE}.number_of_billing_cycles ;;
     description: "The number of billing cycles of the subscription."
-  }
-
-  dimension_group: paid_through {
-    type: time
-    timeframes: [raw, date, month, year]
-    sql: PARSE_TIMESTAMP("%F", ${TABLE}.paid_through_date) ;;
-    description: "The date through which the subscription has been paid. It is the billing_period_end_date at the time of the last successful transaction. If the subscription is pending (has a future start date), this field is nil."
   }
 
   dimension: payment_method_token {
@@ -172,6 +108,60 @@ view: subscription_core {
     type: string
     sql: ${TABLE}.trial_duration_unit ;;
     description: "The trial unit specified in a plan. Specify day or month. Specifying a trial duration unit via the API will override the subscription's plan details."
+  }
+
+  dimension_group: billing_period_end {
+    type: time
+    timeframes: [raw, date, month, year]
+    sql: PARSE_TIMESTAMP("%F", ${TABLE}.billing_period_end_date) ;;
+    description: "The end date for the current billing period, regardless of subscription status. Automatic retries on past due subscriptions do not change the start and end dates of the current billing period."
+  }
+
+  dimension_group: billing_period_start {
+    type: time
+    timeframes: [raw, date, month, year]
+    sql: PARSE_TIMESTAMP("%F", ${TABLE}.billing_period_start_date) ;;
+    description: "The start date for the current billing period, regardless of subscription status. Automatic retries on past due subscriptions do not change the start and end dates of the current billing period."
+  }
+
+  dimension_group: created {
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year,
+      day_of_month,
+      fiscal_month_num,
+      fiscal_quarter,
+      fiscal_quarter_of_year,
+      fiscal_year
+    ]
+    type: time
+    sql: ${TABLE}.created_at ;;
+    description: "The date/time the object was created."
+  }
+
+  dimension_group: first_billing {
+    type: time
+    timeframes: [raw, date, month, year]
+    sql: PARSE_TIMESTAMP("%F", ${TABLE}.first_billing_date) ;;
+    description: "The day the subscription starts billing."
+  }
+
+  dimension_group: next_billing {
+    type: time
+    timeframes: [raw, date, month, year]
+    sql: PARSE_TIMESTAMP("%F",${TABLE}.next_billing_date) ;;
+    description: "The date that the gateway will try to bill the subscription again. The gateway adjusts this date each time it tries to charge the subscription. If the subscription is past due and you have set your processing options to automatically retry failed transactions, the gateway will continue to adjust this date, advancing it based on the settings that you configured in advanced settings."
+  }
+
+  dimension_group: paid_through {
+    type: time
+    timeframes: [raw, date, month, year]
+    sql: PARSE_TIMESTAMP("%F", ${TABLE}.paid_through_date) ;;
+    description: "The date through which the subscription has been paid. It is the billing_period_end_date at the time of the last successful transaction. If the subscription is pending (has a future start date), this field is nil."
   }
 
   dimension_group: updated {

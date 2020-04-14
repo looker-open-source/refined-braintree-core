@@ -1,14 +1,5 @@
-include: "//@{CONFIG_PROJECT_NAME}/views/unregistered_customer.view.lkml"
-
-
 view: unregistered_customer {
-  extends: [unregistered_customer_config]
-}
-
-###################################################
-view: unregistered_customer_core {
-  sql_table_name: @{DATASET_NAME}.UNREGISTERED_CUSTOMER
-    ;;
+  sql_table_name: @{DATASET_NAME}.UNREGISTERED_CUSTOMER ;;
   drill_fields: [id]
 
   dimension: id {
@@ -60,7 +51,6 @@ view: unregistered_customer_core {
     drill_fields: [detail*]
   }
 
-  # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
       id,

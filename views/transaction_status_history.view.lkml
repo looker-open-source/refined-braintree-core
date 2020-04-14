@@ -1,15 +1,5 @@
-include: "//@{CONFIG_PROJECT_NAME}/views/transaction_status_history.view.lkml"
-
-
-view: transaction_status_history{
-  extends: [transaction_status_history_config]
-}
-
-###################################################
-
-view: transaction_status_history_core {
-  sql_table_name: @{DATASET_NAME}.TRANSACTION_STATUS_HISTORY
-    ;;
+view: transaction_status_history {
+  sql_table_name: @{DATASET_NAME}.TRANSACTION_STATUS_HISTORY ;;
 
   dimension: amount {
     type: number
@@ -26,6 +16,17 @@ view: transaction_status_history_core {
     type: string
     sql: ${TABLE}.status ;;
     description: "A record of the statuses that a transaction has progressed through."
+  }
+
+  dimension: transaction_id {
+    type: number
+    sql: ${TABLE}.transaction_id ;;
+  }
+
+  dimension: user {
+    type: string
+    sql: ${TABLE}.user ;;
+    description: "The Braintree Control Panel username of the person who performed an action that triggered the status change of the transaction."
   }
 
   dimension_group: timestamp {
@@ -45,24 +46,11 @@ view: transaction_status_history_core {
     sql: ${TABLE}.timestamp ;;
   }
 
-  dimension: transaction_id {
-    type: number
-    # hidden: yes
-    sql: ${TABLE}.transaction_id ;;
-  }
-
-  dimension: user {
-    type: string
-    sql: ${TABLE}.user ;;
-    description: "The Braintree Control Panel username of the person who performed an action that triggered the status change of the transaction."
-  }
-
   measure: count {
     type: count
     drill_fields: [detail*]
   }
 
-  # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
       transaction.shipping_address_country_name,

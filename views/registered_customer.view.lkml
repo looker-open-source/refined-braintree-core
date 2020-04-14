@@ -1,14 +1,5 @@
-include: "//@{CONFIG_PROJECT_NAME}/views/registered_customer.view.lkml"
-
-
 view: registered_customer {
-  extends: [registered_customer_config]
-}
-
-###################################################
-view: registered_customer_core {
-  sql_table_name: @{DATASET_NAME}.REGISTERED_CUSTOMER
-    ;;
+  sql_table_name: @{DATASET_NAME}.REGISTERED_CUSTOMER ;;
   drill_fields: [id]
 
   dimension: id {
@@ -20,23 +11,6 @@ view: registered_customer_core {
   dimension: company {
     type: string
     sql: ${TABLE}.company ;;
-  }
-
-  dimension_group: created {
-    type: time
-    sql: ${TABLE}.created_at ;;
-    timeframes: [
-      raw,
-      date,
-      week,
-      month,
-      quarter,
-      year,
-      fiscal_month_num,
-      fiscal_quarter,
-      fiscal_quarter_of_year,
-      fiscal_year
-    ]
   }
 
   dimension: email {
@@ -64,6 +38,28 @@ view: registered_customer_core {
     sql: ${TABLE}.phone ;;
   }
 
+  dimension: website {
+    type: string
+    sql: ${TABLE}.website ;;
+  }
+
+  dimension_group: created {
+    type: time
+    sql: ${TABLE}.created_at ;;
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year,
+      fiscal_month_num,
+      fiscal_quarter,
+      fiscal_quarter_of_year,
+      fiscal_year
+    ]
+  }
+
   dimension_group: updated {
     timeframes: [
       raw,
@@ -79,11 +75,6 @@ view: registered_customer_core {
     ]
     type: time
     sql: ${TABLE}.updated_at ;;
-  }
-
-  dimension: website {
-    type: string
-    sql: ${TABLE}.website ;;
   }
 
   measure: count {

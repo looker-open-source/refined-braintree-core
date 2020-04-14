@@ -1,15 +1,5 @@
-include: "//@{CONFIG_PROJECT_NAME}/views/subscription_discount.view.lkml"
-
-
 view: subscription_discount {
-  extends: [subscription_discount_config]
-}
-
-###################################################
-
-view: subscription_discount_core {
-  sql_table_name: @{DATASET_NAME}.SUBSCRIPTION_DISCOUNT
-    ;;
+  sql_table_name: @{DATASET_NAME}.SUBSCRIPTION_DISCOUNT ;;
   drill_fields: [id]
 
   dimension: id {

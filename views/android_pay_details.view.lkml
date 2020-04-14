@@ -1,12 +1,4 @@
-include: "//@{CONFIG_PROJECT_NAME}/views/android_pay_details.view.lkml"
-
-
-view: android_pay_details{
-  extends: [android_pay_details_config]
-}
-
-###################################################
-view: android_pay_details_core {
+view: android_pay_details {
   sql_table_name: @{DATASET_NAME}.ANDROID_PAY_DETAILS ;;
 
   dimension: bin {

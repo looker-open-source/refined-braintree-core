@@ -1,15 +1,5 @@
-include: "//@{CONFIG_PROJECT_NAME}/views/subscription_add_on.view.lkml"
-
-
 view: subscription_add_on {
-  extends: [subscription_add_on_config]
-}
-
-###################################################
-
-view: subscription_add_on_core {
-  sql_table_name: @{DATASET_NAME}.SUBSCRIPTION_ADD_ON
-    ;;
+  sql_table_name: @{DATASET_NAME}.SUBSCRIPTION_ADD_ON ;;
   drill_fields: [id]
 
   dimension: id {
@@ -81,7 +71,7 @@ view: subscription_add_on_core {
   }
 
   measure: count {
-    label:"Add-On count"
+    label: "Add-On count"
     type: count
     drill_fields: [id, name, subscription.id]
   }

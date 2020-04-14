@@ -1,15 +1,5 @@
-include: "//@{CONFIG_PROJECT_NAME}/views/subscription_status_history.view.lkml"
-
-
 view: subscription_status_history {
-  extends: [subscription_status_history_config]
-}
-
-###################################################
-
-view: subscription_status_history_core {
-  sql_table_name: @{DATASET_NAME}.SUBSCRIPTION_STATUS_HISTORY
-    ;;
+  sql_table_name: @{DATASET_NAME}.SUBSCRIPTION_STATUS_HISTORY ;;
 
   dimension: balance {
     type: number
@@ -41,6 +31,12 @@ view: subscription_status_history_core {
     sql: ${TABLE}.subscription_id ;;
   }
 
+  dimension: user {
+    type: string
+    sql: ${TABLE}.user ;;
+    description: "The Braintree Control Panel username of the person who performed an action that triggered the status change of the subscription."
+  }
+
   dimension_group: timestamp {
     type: time
     timeframes: [
@@ -56,12 +52,6 @@ view: subscription_status_history_core {
       fiscal_year
     ]
     sql: ${TABLE}.timestamp ;;
-  }
-
-  dimension: user {
-    type: string
-    sql: ${TABLE}.user ;;
-    description: "The Braintree Control Panel username of the person who performed an action that triggered the status change of the subscription."
   }
 
   measure: count {

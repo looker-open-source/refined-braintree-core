@@ -1,13 +1,4 @@
-include: "//@{CONFIG_PROJECT_NAME}/views/transaction.view.lkml"
-
-
 view: transaction {
-  extends: [transaction_config]
-}
-
-###################################################
-
-view: transaction_core {
   sql_table_name: @{DATASET_NAME}.TRANSACTION ;;
   drill_fields: [refunded_transaction_id]
 
@@ -97,14 +88,6 @@ view: transaction_core {
     sql: ${TABLE}.customer_id ;;
   }
 
-  dimension_group: disbursement_date {
-    group_label: "Disbursement"
-    type: time
-    timeframes: [raw, date, month]
-    sql: PARSE_TIMESTAMP("%F", ${TABLE}.disbursement_date) ;;
-    description: "The date that the funds associated with this transaction were disbursed. This attribute is only available if you have an eligible merchant account."
-  }
-
   dimension: disbursement_funds_held {
     type: yesno
     group_label: "Disbursement"
@@ -175,14 +158,15 @@ view: transaction_core {
     description: "The authorization code returned by the processor."
   }
 
-#https://developers.braintreepayments.com/reference/general/processor-responses/authorization-responses
-  dimension: processor_authorization_type  {
+  dimension: processor_authorization_type {
     group_label: "Processor Authorization"
+
     case: {
       when: {
         sql: ${processor_authorization_code} < 2000 ;;
         label: "Approved"
       }
+
       when: {
         sql: ${processor_authorization_code} IN (
                 2000,2001,2002,2003,
@@ -191,8 +175,7 @@ view: transaction_core {
                 2046,2048,2057,2062,
                 2092,2099
               )
-              OR ${processor_authorization_code} >= 2101 AND ${processor_authorization_code} <= 3000
-        ;;
+              OR ${processor_authorization_code} >= 2101 AND ${processor_authorization_code} <= 3000 ;;
         label: "Soft Decline"
       }
       else: "Hard Decline"
@@ -332,10 +315,53 @@ view: transaction_core {
     description: "The value passed by the merchant with a voice-authorized transaction."
   }
 
+  dimension: tender {
+    type: string
+    sql: CASE
+          WHEN ${credit_card.transaction_id} IS NOT NULL THEN 'Credit Card'
+           WHEN ${masterpass_card_details.transaction_id} IS NOT NULL THEN 'MasterPass card'
+           WHEN ${paypal_details.transaction_id} IS NOT NULL THEN 'Paypal'
+           WHEN ${venmo_details.transaction_id} IS NOT NULL THEN 'Venmo'
+           WHEN ${visa_checkout_details.transaction_id} IS NOT NULL THEN 'Visa Checkout'
+           WHEN ${apple_pay_card.transaction_id} IS NOT NULL THEN 'Apple Pay'
+          WHEN ${android_pay_details.transaction_id} IS NOT NULL THEN 'Android Pay'
+          ELSE 'Other' END ;;
+  }
+
+  dimension: tender_display {
+    type: string
+    sql: CASE
+          WHEN ${transaction.payment_instrument_type} = "credit_card" THEN 'Credit Card'
+           WHEN ${transaction.payment_instrument_type} = "masterpass_card" THEN 'MasterPass card'
+           WHEN ${transaction.payment_instrument_type} = "paypal_here" THEN 'Paypal'
+           WHEN ${transaction.payment_instrument_type} = "paypal_account" THEN 'Paypal'
+           WHEN ${transaction.payment_instrument_type} = "venmo_account" THEN 'Venmo'
+           WHEN ${transaction.payment_instrument_type} = "visa_checkout_card" THEN 'Visa Checkout'
+           WHEN ${transaction.payment_instrument_type} = "apple_pay_card" THEN 'Apple Pay'
+           WHEN ${transaction.payment_instrument_type} = "android_pay_card" THEN 'Android Pay'
+           WHEN ${transaction.payment_instrument_type} = "samsung_pay_card" THEN 'Samsung Pay'
+           WHEN ${transaction.payment_instrument_type} = "us_bank_account" THEN 'US Bank'
+          ELSE 'Other' END ;;
+  }
+
+  dimension: denied {
+    type: yesno
+    sql: ${status} IN ("SettlementDeclined","GatewayRejected","AuthorizationExpired","ProcessorDeclined","Failed") ;;
+  }
+
+  dimension_group: disbursement_date {
+    group_label: "Disbursement"
+    type: time
+    timeframes: [raw, date, month]
+    sql: PARSE_TIMESTAMP("%F", ${TABLE}.disbursement_date) ;;
+    description: "The date that the funds associated with this transaction were disbursed. This attribute is only available if you have an eligible merchant account."
+  }
+
   dimension_group: created {
     type: time
     sql: ${TABLE}.created_at ;;
-    timeframes: [raw,
+    timeframes: [
+      raw,
       day_of_week,
       hour_of_day,
       date,
@@ -365,7 +391,8 @@ view: transaction_core {
       fiscal_month_num,
       fiscal_quarter,
       fiscal_quarter_of_year,
-      fiscal_year]
+      fiscal_year
+    ]
   }
 
   dimension_group: today {
@@ -388,40 +415,6 @@ view: transaction_core {
     sql: CURRENT_TIMESTAMP() ;;
   }
 
-  dimension: tender {
-    type: string
-    sql: CASE
-          WHEN ${credit_card.transaction_id} IS NOT NULL THEN 'Credit Card'
-           WHEN ${masterpass_card_details.transaction_id} IS NOT NULL THEN 'MasterPass card'
-           WHEN ${paypal_details.transaction_id} IS NOT NULL THEN 'Paypal'
-           WHEN ${venmo_details.transaction_id} IS NOT NULL THEN 'Venmo'
-           WHEN ${visa_checkout_details.transaction_id} IS NOT NULL THEN 'Visa Checkout'
-           WHEN ${apple_pay_card.transaction_id} IS NOT NULL THEN 'Apple Pay'
-          WHEN ${android_pay_details.transaction_id} IS NOT NULL THEN 'Android Pay'
-          ELSE 'Other' END;;
-  }
-
-  dimension: tender_display {
-    type: string
-    sql: CASE
-          WHEN ${transaction.payment_instrument_type} = "credit_card" THEN 'Credit Card'
-           WHEN ${transaction.payment_instrument_type} = "masterpass_card" THEN 'MasterPass card'
-           WHEN ${transaction.payment_instrument_type} = "paypal_here" THEN 'Paypal'
-           WHEN ${transaction.payment_instrument_type} = "paypal_account" THEN 'Paypal'
-           WHEN ${transaction.payment_instrument_type} = "venmo_account" THEN 'Venmo'
-           WHEN ${transaction.payment_instrument_type} = "visa_checkout_card" THEN 'Visa Checkout'
-           WHEN ${transaction.payment_instrument_type} = "apple_pay_card" THEN 'Apple Pay'
-           WHEN ${transaction.payment_instrument_type} = "android_pay_card" THEN 'Android Pay'
-           WHEN ${transaction.payment_instrument_type} = "samsung_pay_card" THEN 'Samsung Pay'
-           WHEN ${transaction.payment_instrument_type} = "us_bank_account" THEN 'US Bank'
-          ELSE 'Other' END;;
-  }
-
-  dimension: denied {
-    type: yesno
-    sql: ${status} IN ("SettlementDeclined","GatewayRejected","AuthorizationExpired","ProcessorDeclined","Failed") ;;
-  }
-
   measure: count {
     type: count
     label: "Number of Transactions"
@@ -435,6 +428,7 @@ view: transaction_core {
     label: "Number of Declines"
     drill_fields: [detail*]
     value_format_name: decimal_0
+
     filters: {
       field: denied
       value: "yes"
@@ -460,6 +454,7 @@ view: transaction_core {
     type: sum
     sql: ${amount} ;;
     value_format_name: usd
+
     filters: {
       field: denied
       value: "yes"
@@ -517,17 +512,19 @@ view: transaction_core {
   }
 }
 
-# If necessary, uncomment the line below to include explore_source.
-# include: "block_braintree.model.lkml"
-
 view: transaction_ndt {
   derived_table: {
     explore_source: transaction {
       column: tender_display {}
+
       column: count_declines {}
     }
   }
-  dimension: tender_display {hidden: yes}
+
+  dimension: tender_display {
+    hidden: yes
+  }
+
   dimension: count_declines {
     hidden: yes
     label: "Transaction Number of Declines"

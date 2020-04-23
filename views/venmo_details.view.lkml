@@ -1,61 +1,58 @@
-view: unregistered_customer {
-  sql_table_name: @{DATASET_NAME}.UNREGISTERED_CUSTOMER ;;
-  drill_fields: [id]
+view: transaction_status_history {
+  sql_table_name: @{DATASET_NAME}.TRANSACTION_STATUS_HISTORY ;;
 
-  dimension: id {
-    primary_key: yes
+  dimension: amount {
     type: number
-    sql: ${TABLE}.id ;;
+    sql: ${TABLE}.amount ;;
   }
 
-  dimension: company {
+  dimension: source {
     type: string
-    sql: ${TABLE}.company ;;
+    sql: ${TABLE}.source ;;
+    description: "How a transaction was created"
   }
 
-  dimension: email {
+  dimension: status {
     type: string
-    sql: ${TABLE}.email ;;
-  }
-
-  dimension: first_name {
-    type: string
-    sql: ${TABLE}.first_name ;;
-  }
-
-  dimension: last_name {
-    type: string
-    sql: ${TABLE}.last_name ;;
-  }
-
-  dimension: phone {
-    type: string
-    sql: ${TABLE}.phone ;;
+    sql: ${TABLE}.status ;;
+    description: "A record of the statuses that a transaction has progressed through."
   }
 
   dimension: transaction_id {
     type: number
-    hidden: yes
     sql: ${TABLE}.transaction_id ;;
   }
 
-  dimension: website {
+  dimension: user {
     type: string
-    sql: ${TABLE}.website ;;
+    sql: ${TABLE}.user ;;
+    description: "The Braintree Control Panel username of the person who performed an action that triggered the status change of the transaction."
+  }
+
+  dimension_group: timestamp {
+    type: time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year,
+      fiscal_month_num,
+      fiscal_quarter,
+      fiscal_quarter_of_year,
+      fiscal_year
+    ]
+    sql: ${TABLE}.timestamp ;;
   }
 
   measure: count {
     type: count
-    label: "Number of Unregistered Customers"
-    value_format_name: decimal_0
     drill_fields: [detail*]
   }
 
   set: detail {
     fields: [
-      id,
-      last_name,
-      first_name,
       transaction.shipping_address_country_name,
       transaction.billing_address_country_name,
       transaction.shipping_address_first_name,

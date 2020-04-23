@@ -1,174 +1,78 @@
-view: merchant_account {
-  sql_table_name: @{DATASET_NAME}.MERCHANT_ACCOUNT ;;
+view: subscription_discount {
+  sql_table_name: @{DATASET_NAME}.SUBSCRIPTION_DISCOUNT
+    ;;
   drill_fields: [id]
 
   dimension: id {
     primary_key: yes
     type: number
     sql: ${TABLE}.id ;;
-    description: "Specifies the ID of the sub-merchant, which can be referenced when creating transactions with service fees."
   }
 
-  dimension: address_company {
-    group_label: "Address"
-    label: "Company"
-    type: string
-    sql: ${TABLE}.address_company ;;
-  }
-
-  dimension: address_country_name {
-    group_label: "Address"
-    label: "County Name"
-    type: string
-    sql: ${TABLE}.address_country_name ;;
-  }
-
-  dimension: address_first_name {
-    group_label: "Address"
-    label: "First Name"
-    type: string
-    sql: ${TABLE}.address_first_name ;;
-  }
-
-  dimension: address_last_name {
-    group_label: "Address"
-    label: "Last Name"
-    type: string
-    sql: ${TABLE}.address_last_name ;;
-  }
-
-  dimension: address_locality {
-    group_label: "Address"
-    label: "Locality"
-    type: string
-    sql: ${TABLE}.address_locality ;;
-  }
-
-  dimension: address_postal_code {
-    group_label: "Address"
-    label: "Postal Code"
+  dimension: amount {
     type: number
-    sql: ${TABLE}.address_postal_code ;;
+    sql: ${TABLE}.amount ;;
+    description: "The discount amount."
   }
 
-  dimension: address_region {
-    group_label: "Address"
-    label: "Region"
-    type: string
-    sql: ${TABLE}.address_region ;;
-  }
-
-  dimension: address_street_address {
-    group_label: "Address"
-    label: "Street Address"
-    type: string
-    sql: ${TABLE}.address_street_address ;;
-  }
-
-  dimension: currency_iso_code {
-    type: string
-    sql: ${TABLE}.currency_iso_code ;;
-    description: "The ISO code for the currency the merchant account uses. See the ISO 4217 codes."
-  }
-
-  dimension: date_of_birth {
-    type: string
-    sql: ${TABLE}.date_of_birth ;;
-    description: "The applicant's date of birth."
-  }
-
-  dimension: email {
-    type: string
-    sql: ${TABLE}.email ;;
-    description: "Email address composed of ASCII characters."
-  }
-
-  dimension: first_name {
-    type: string
-    sql: ${TABLE}.first_name ;;
-    description: "The first name."
-  }
-
-  dimension: funding_details_account_number_last4 {
-    group_label: "Funding Details"
-    label: "Last 4"
+  dimension: current_billing_cycle {
     type: number
-    sql: ${TABLE}.funding_details_account_number_last4 ;;
+    sql: ${TABLE}.current_billing_cycle ;;
+    description: "The discount's current billing cycle. It is incremented each time the discount is successfully applied."
   }
 
-  dimension: funding_details_descriptor {
-    group_label: "Funding Details"
-    label: "Descriptor"
+  dimension: description {
     type: string
-    sql: ${TABLE}.funding_details_descriptor ;;
+    sql: ${TABLE}.description ;;
+    description: "A description of the discount."
   }
 
-  dimension: funding_details_destination {
-    group_label: "Funding Details"
-    label: "Destination"
+  dimension: kind {
+    hidden: yes
     type: string
-    sql: ${TABLE}.funding_details_destination ;;
+    sql: ${TABLE}.kind ;;
+    description: "The value that defines whether the modification being applied to a plan or subscription is an add-on or a discount."
   }
 
-  dimension: funding_details_email {
-    group_label: "Funding Details"
-    label: "Email"
+  dimension: name {
     type: string
-    sql: ${TABLE}.funding_details_email ;;
+    sql: ${TABLE}.name ;;
+    description: "The name of the discount."
   }
 
-  dimension: funding_details_mobile_phone {
-    group_label: "Funding Details"
-    label: "Mobile Phone"
-    type: string
-    sql: ${TABLE}.funding_details_mobile_phone ;;
-  }
-
-  dimension: funding_details_routing_number {
-    group_label: "Funding Details"
-    label: "Routing Number"
-    type: number
-    sql: ${TABLE}.funding_details_routing_number ;;
-  }
-
-  dimension: is_default {
+  dimension: never_expires {
     type: yesno
-    sql: ${TABLE}.is_default ;;
+    sql: ${TABLE}.never_expires ;;
+    description: "A value indicating whether a discount's billing cycle is set to never expire instead of running for a specific number of billing cycles."
   }
 
-  dimension: last_name {
-    type: string
-    sql: ${TABLE}.last_name ;;
-    description: "The last name."
+  dimension: number_of_billing_cycles {
+    type: number
+    sql: ${TABLE}.number_of_billing_cycles ;;
+    description: "Specifies the number of billing cycles of the discount."
   }
 
-  dimension: phone {
-    type: string
-    sql: ${TABLE}.phone ;;
-    description: "The phone number."
+  dimension: plan_id {
+    hidden: yes
+    type: number
+    sql: ${TABLE}.plan_id ;;
   }
 
-  dimension: status {
-    type: string
-    sql: ${TABLE}.status ;;
-    description: "The state of the merchant account can either be Pending, Active, or Suspended."
+  dimension: quantity {
+    type: number
+    sql: ${TABLE}.quantity ;;
+    description: "The number of times this particular discount is applied to the subscription."
+  }
+
+  dimension: subscription_id {
+    hidden: yes
+    type: number
+    sql: ${TABLE}.subscription_id ;;
   }
 
   measure: count {
+    label: "Discount count"
     type: count
-    drill_fields: [detail*]
-  }
-
-  set: detail {
-    fields: [
-      id,
-      address_last_name,
-      address_first_name,
-      last_name,
-      address_country_name,
-      first_name,
-      subscription.count,
-      transaction.count
-    ]
+    drill_fields: [id, name, subscription.id]
   }
 }

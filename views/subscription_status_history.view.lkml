@@ -1,51 +1,39 @@
-view: registered_customer {
-  sql_table_name: @{DATASET_NAME}.REGISTERED_CUSTOMER ;;
-  drill_fields: [id]
+view: subscription_status_history {
+  sql_table_name: @{DATASET_NAME}.SUBSCRIPTION_STATUS_HISTORY
+    ;;
 
-  dimension: id {
-    primary_key: yes
+  dimension: balance {
     type: number
-    sql: ${TABLE}.id ;;
+    sql: ${TABLE}.balance ;;
+    description: "The balance of the subscription."
   }
 
-  dimension: company {
+  dimension: price {
+    type: number
+    sql: ${TABLE}.price ;;
+    description: "The price of the subscription."
+  }
+
+  dimension: source {
     type: string
-    sql: ${TABLE}.company ;;
+    sql: ${TABLE}.source ;;
+    description: "Where the subscription event was created."
   }
 
-  dimension: email {
+  dimension: status {
     type: string
-    sql: ${TABLE}.email ;;
+    sql: ${TABLE}.status ;;
+    description: "The subscription status."
   }
 
-  dimension: first_name {
-    type: string
-    sql: ${TABLE}.first_name ;;
+  dimension: subscription_id {
+    hidden: yes
+    type: number
+    sql: ${TABLE}.subscription_id ;;
   }
 
-  dimension: last_name {
-    type: string
-    sql: ${TABLE}.last_name ;;
-  }
-
-  dimension: full_name {
-    type: string
-    sql: CONCAT(${first_name}," ",${last_name}) ;;
-  }
-
-  dimension: phone {
-    type: string
-    sql: ${TABLE}.phone ;;
-  }
-
-  dimension: website {
-    type: string
-    sql: ${TABLE}.website ;;
-  }
-
-  dimension_group: created {
+  dimension_group: timestamp {
     type: time
-    sql: ${TABLE}.created_at ;;
     timeframes: [
       raw,
       date,
@@ -58,27 +46,23 @@ view: registered_customer {
       fiscal_quarter_of_year,
       fiscal_year
     ]
+    sql: ${TABLE}.timestamp ;;
   }
 
-  dimension_group: updated {
-    timeframes: [
-      raw,
-      date,
-      week,
-      month,
-      quarter,
-      year,
-      fiscal_month_num,
-      fiscal_quarter,
-      fiscal_quarter_of_year,
-      fiscal_year
-    ]
-    type: time
-    sql: ${TABLE}.updated_at ;;
+  dimension: user {
+    type: string
+    sql: ${TABLE}.user ;;
+    description: "The Braintree Control Panel username of the person who performed an action that triggered the status change of the subscription."
   }
 
   measure: count {
     type: count
-    drill_fields: [id, last_name, first_name]
+    drill_fields: [subscription.id]
+  }
+
+  measure: total_balance {
+    type: sum
+    sql: ${balance} ;;
+    value_format_name: usd
   }
 }

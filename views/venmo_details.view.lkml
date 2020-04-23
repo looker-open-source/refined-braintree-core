@@ -1,113 +1,52 @@
-view: transaction_add_on {
-  sql_table_name: @{DATASET_NAME}.TRANSACTION_ADD_ON ;;
-  drill_fields: [id]
+view: venmo_details {
+  sql_table_name: @{DATASET_NAME}.VENMO_DETAILS ;;
 
-  dimension: id {
-    primary_key: yes
-    type: number
-    sql: ${TABLE}.id ;;
-    hidden: yes
-  }
-
-  dimension: amount {
-    type: number
-    hidden: yes
-    sql: ${TABLE}.amount ;;
-    description: "The add on amount"
-  }
-
-  dimension: current_billing_cycle {
-    type: number
-    sql: ${TABLE}.current_billing_cycle ;;
-    description: "The add-on's current billing cycle. It is incremented each time the add-on is successfully applied."
-  }
-
-  dimension: description {
+  dimension: image_url {
     type: string
-    sql: ${TABLE}.description ;;
-    description: "A description of the add-on."
+    sql: ${TABLE}.image_url ;;
+    description: "A URL that points to a payment method image resource (a PNG file) hosted by Braintree."
   }
 
-  dimension: kind {
-    hidden: yes
+  dimension: source_description {
     type: string
-    sql: ${TABLE}.kind ;;
-    description: "The value that defines whether the modification being applied to a plan or subscription is an add-on or a discount."
+    sql: ${TABLE}.source_description ;;
+    description: "A short description of the payment method, including the Venmo username."
   }
 
-  dimension: name {
-    type: string
-    sql: ${TABLE}.name ;;
-    description: "The name of the add-on."
-  }
-
-  dimension: never_expires {
-    type: yesno
-    sql: ${TABLE}.never_expires ;;
-  }
-
-  dimension: number_of_billing_cycles {
-    hidden: yes
+  dimension: token {
     type: number
-    sql: ${TABLE}.number_of_billing_cycles ;;
-    description: "The number of billing cycles of the subscription."
-  }
-
-  dimension: plan_id {
-    type: number
-    hidden: yes
-    sql: ${TABLE}.plan_id ;;
-    description: "The plan identifier."
-  }
-
-  dimension: quantity {
-    type: number
-    hidden: yes
-    sql: ${TABLE}.quantity ;;
-    description: "The number of times this particular add-on is applied to the subscription. "
+    sql: ${TABLE}.token ;;
+    description: "An alphanumeric value that references a specific payment method stored in your Vault."
   }
 
   dimension: transaction_id {
     type: number
     hidden: yes
+    primary_key: yes
     sql: ${TABLE}.transaction_id ;;
+  }
+
+  dimension: username {
+    type: string
+    sql: ${TABLE}.username ;;
+    description: "The Venmo username of the Venmo account."
+  }
+
+  dimension: venmo_user_id {
+    type: number
+    sql: ${TABLE}.venmo_user_id ;;
+    description: "The Venmo user ID of the Venmo account."
   }
 
   measure: count {
     type: count
-    label: "Number of Add-Ons"
-    value_format_name: decimal_0
+    label: "Number of Venmo Transactions"
     drill_fields: [detail*]
-  }
-
-  measure: total_add_on_amount {
-    type: sum
-    sql: ${amount} ;;
-    value_format_name: usd
-  }
-
-  measure: total_add_on_quantity {
-    type: sum
-    sql: ${quantity} ;;
-    value_format_name: decimal_0
-  }
-
-  measure: average_add_on_quantity {
-    type: average
-    sql: ${quantity} ;;
-    value_format_name: decimal_1
-  }
-
-  measure: average_add_on_amount {
-    type: average
-    sql: ${amount} ;;
-    value_format_name: decimal_1
   }
 
   set: detail {
     fields: [
-      id,
-      name,
+      username,
       transaction.shipping_address_country_name,
       transaction.billing_address_country_name,
       transaction.shipping_address_first_name,

@@ -1,70 +1,175 @@
-view: apple_pay_card {
-  sql_table_name: @{DATASET_NAME}.APPLE_PAY_CARD ;;
+view: merchant_account {
+  sql_table_name: @{DATASET_NAME}.MERCHANT_ACCOUNT ;;
+  drill_fields: [id]
 
-  dimension: card_type {
-    type: string
-    sql: ${TABLE}.card_type ;;
-    description: "The type of the credit card. "
-  }
-
-  dimension: expiration_month {
-    type: string
-    sql: ${TABLE}.expiration_month ;;
-    description: "The expiration month of the card, formatted MM."
-  }
-
-  dimension: expiration_year {
-    type: string
-    sql: ${TABLE}.expiration_year ;;
-    description: "The 4-digit year associated with the card, formatted YYYY."
-  }
-
-  dimension: last4 {
+  dimension: id {
+    primary_key: yes
+    label: "Merchant Account ID"
     type: number
-    sql: ${TABLE}.last4 ;;
-    description: "The last 4 digits of the device-specific account number (DPAN)."
+    sql: ${TABLE}.id ;;
+    description: "Specifies the ID of the sub-merchant, which can be referenced when creating transactions with service fees."
   }
 
-  dimension: payment_instrument_name {
+  dimension: address_company {
+    group_label: "Address"
+    label: "Company"
     type: string
-    sql: ${TABLE}.payment_instrument_name ;;
-    description: "A description of the payment method intended for display to the user, typically card type and last 4 digits of the physical card number stored by Wallet (formerly Passbook). We receive this description alongside the DPAN when processing an Apple Pay transaction."
+    sql: ${TABLE}.address_company ;;
   }
 
-  dimension: source_description {
+  dimension: address_country_name {
+    group_label: "Address"
+    label: "County Name"
     type: string
-    sql: ${TABLE}.source_description ;;
-    description: "Indicates what type of payment method was tokenized by the network. Also includes an identifier for the account (e.g. last 4 digits if the payment method was a credit card)."
+    sql: ${TABLE}.address_country_name ;;
   }
 
-  dimension: token {
-    type: number
-    sql: ${TABLE}.token ;;
-    description: "An alphanumeric value that references a specific payment method stored in your Vault."
+  dimension: address_first_name {
+    group_label: "Address"
+    label: "First Name"
+    type: string
+    sql: ${TABLE}.address_first_name ;;
   }
 
-  dimension: transaction_id {
+  dimension: address_last_name {
+    group_label: "Address"
+    label: "Last Name"
+    type: string
+    sql: ${TABLE}.address_last_name ;;
+  }
+
+  dimension: address_locality {
+    group_label: "Address"
+    label: "Locality"
+    type: string
+    sql: ${TABLE}.address_locality ;;
+  }
+
+  dimension: address_postal_code {
+    group_label: "Address"
+    label: "Postal Code"
     type: number
-    sql: ${TABLE}.transaction_id ;;
+    sql: ${TABLE}.address_postal_code ;;
+  }
+
+  dimension: address_region {
+    group_label: "Address"
+    label: "Region"
+    type: string
+    sql: ${TABLE}.address_region ;;
+  }
+
+  dimension: address_street_address {
+    group_label: "Address"
+    label: "Street Address"
+    type: string
+    sql: ${TABLE}.address_street_address ;;
+  }
+
+  dimension: currency_iso_code {
+    type: string
+    sql: ${TABLE}.currency_iso_code ;;
+    description: "The ISO code for the currency the merchant account uses. See the ISO 4217 codes."
+  }
+
+  dimension: date_of_birth {
+    type: string
+    sql: ${TABLE}.date_of_birth ;;
+    description: "The applicant's date of birth."
+  }
+
+  dimension: email {
+    type: string
+    sql: ${TABLE}.email ;;
+    description: "Email address composed of ASCII characters."
+  }
+
+  dimension: first_name {
+    type: string
+    sql: ${TABLE}.first_name ;;
+    description: "The first name."
+  }
+
+  dimension: funding_details_account_number_last4 {
+    group_label: "Funding Details"
+    label: "Last 4"
+    type: number
+    sql: ${TABLE}.funding_details_account_number_last4 ;;
+  }
+
+  dimension: funding_details_descriptor {
+    group_label: "Funding Details"
+    label: "Descriptor"
+    type: string
+    sql: ${TABLE}.funding_details_descriptor ;;
+  }
+
+  dimension: funding_details_destination {
+    group_label: "Funding Details"
+    label: "Destination"
+    type: string
+    sql: ${TABLE}.funding_details_destination ;;
+  }
+
+  dimension: funding_details_email {
+    group_label: "Funding Details"
+    label: "Email"
+    type: string
+    sql: ${TABLE}.funding_details_email ;;
+  }
+
+  dimension: funding_details_mobile_phone {
+    group_label: "Funding Details"
+    label: "Mobile Phone"
+    type: string
+    sql: ${TABLE}.funding_details_mobile_phone ;;
+  }
+
+  dimension: funding_details_routing_number {
+    group_label: "Funding Details"
+    label: "Routing Number"
+    type: number
+    sql: ${TABLE}.funding_details_routing_number ;;
+  }
+
+  dimension: is_default {
+    type: yesno
+    sql: ${TABLE}.is_default ;;
+  }
+
+  dimension: last_name {
+    type: string
+    sql: ${TABLE}.last_name ;;
+    description: "The last name."
+  }
+
+  dimension: phone {
+    type: string
+    sql: ${TABLE}.phone ;;
+    description: "The phone number."
+  }
+
+  dimension: status {
+    type: string
+    sql: ${TABLE}.status ;;
+    description: "The state of the merchant account can either be Pending, Active, or Suspended."
   }
 
   measure: count {
     type: count
-    label: "Number of Apple Pay Transactions"
-    value_format_name: decimal_0
     drill_fields: [detail*]
   }
 
   set: detail {
     fields: [
-      payment_instrument_name,
-      transaction.shipping_address_country_name,
-      transaction.billing_address_country_name,
-      transaction.shipping_address_first_name,
-      transaction.refunded_transaction_id,
-      transaction.shipping_address_last_name,
-      transaction.billing_address_first_name,
-      transaction.billing_address_last_name
+      id,
+      address_last_name,
+      address_first_name,
+      last_name,
+      address_country_name,
+      first_name,
+      subscription.count,
+      transaction.count
     ]
   }
 }

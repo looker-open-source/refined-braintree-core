@@ -1,140 +1,79 @@
-view: masterpass_card_details {
-  sql_table_name: @{DATASET_NAME}.MASTERPASS_CARD_DETAILS ;;
+view: subscription_add_on {
+  sql_table_name: @{DATASET_NAME}.SUBSCRIPTION_ADD_ON
+    ;;
+  drill_fields: [id]
 
-  dimension: bin {
-    type: number
-    group_label: "Card Details"
-    sql: ${TABLE}.bin ;;
-    description: "The first 6 digits of the credit card, known as the bank identification number (BIN)."
-  }
-
-  dimension: card_type {
-    type: string
-    sql: ${TABLE}.card_type ;;
-    description: "The type of the credit card. "
-  }
-
-  dimension: cardholder_name {
-    type: string
-    group_label: "Card Details"
-    sql: ${TABLE}.cardholder_name ;;
-    description: "The cardholder name associated with the credit card."
-  }
-
-  dimension: commercial {
-    type: yesno
-    sql: ${TABLE}.commercial ;;
-    description: "Whether the card type is a commercial card and is capable of processing Level 2 transactions. "
-  }
-
-  dimension: country_of_issuance {
-    type: string
-    group_label: "Card Details"
-    sql: ${TABLE}.country_of_issuance ;;
-    description: "The country that issued the credit card. Possible country values follow ISO 3166-1.The value Unknown will be returned if we cannot immediately determine the card's country of issuance from the bank identification number (BIN)."
-  }
-
-  dimension: debit {
-    type: yesno
-    sql: ${TABLE}.debit ;;
-    description: "Whether the card is a debit card. "
-  }
-
-  dimension: durbin_regulated {
-    type: yesno
-    sql: ${TABLE}.durbin_regulated ;;
-    description: "A value indicating whether the issuing bank's card range is regulated by the Durbin Amendment due to the bank's assets. "
-  }
-
-  dimension: expiration_month {
-    type: string
-    group_label: "Card Details"
-    sql: ${TABLE}.expiration_month ;;
-    description: "The expiration month of a credit card, formatted MM. May be used with expiration_year, and instead of expiration_date."
-  }
-
-  dimension: expiration_year {
-    type: string
-    group_label: "Card Details"
-    sql: ${TABLE}.expiration_year ;;
-    description: "The two or four digit year associated with a credit card, formatted YYYY or YY. May be used with expiration_month, and instead of expiration_date."
-  }
-
-  dimension: healthcare {
-    type: yesno
-    sql: ${TABLE}.healthcare ;;
-    description: "Whether the card is a healthcare card. "
-  }
-
-  dimension: image_url {
-    type: string
-    sql: ${TABLE}.image_url ;;
-    description: "A URL that points to a payment method image resource (a PNG file) hosted by Braintree."
-  }
-
-  dimension: issuing_bank {
-    type: string
-    group_label: "Card Details"
-    sql: ${TABLE}.issuing_bank ;;
-    description: "The bank that issued the credit card."
-  }
-
-  dimension: last4 {
-    type: number
-    group_label: "Card Details"
-    sql: ${TABLE}.last4 ;;
-  }
-
-  dimension: payroll {
-    type: yesno
-    sql: ${TABLE}.payroll ;;
-    description: "Whether the card is a payroll card. "
-  }
-
-  dimension: prepaid {
-    type: yesno
-    sql: ${TABLE}.prepaid ;;
-    description: "Whether the card is a prepaid card. "
-  }
-
-  dimension: product_id {
-    type: number
-    hidden: yes
-    sql: ${TABLE}.product_id ;;
-    description: "The code for the product type of the card (e.g. D (Visa Signature Preferred), G (Visa Business)). See Product ID codes below for possible values."
-  }
-
-  dimension: token {
-    type: number
-    group_label: "Card Details"
-    sql: ${TABLE}.token ;;
-    description: "An alphanumeric value that references a specific payment method stored in your Vault."
-  }
-
-  dimension: transaction_id {
-    type: number
-    hidden: yes
+  dimension: id {
     primary_key: yes
-    sql: ${TABLE}.transaction_id ;;
+    type: number
+    sql: ${TABLE}.id ;;
+  }
+
+  dimension: amount {
+    type: number
+    sql: ${TABLE}.amount ;;
+    description: "The add on amount"
+  }
+
+  dimension: current_billing_cycle {
+    type: number
+    sql: ${TABLE}.current_billing_cycle ;;
+    description: "The add-on's current billing cycle. It is incremented each time the add-on is successfully applied."
+  }
+
+  dimension: description {
+    type: string
+    sql: ${TABLE}.description ;;
+    description: "A description of the add-on."
+  }
+
+  dimension: kind {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.kind ;;
+    description: "The value that defines whether the modification being applied to a plan or subscription is an add-on or a discount. "
+  }
+
+  dimension: name {
+    type: string
+    sql: ${TABLE}.name ;;
+    description: "The name of the add-on."
+  }
+
+  dimension: never_expires {
+    type: yesno
+    sql: ${TABLE}.never_expires ;;
+  }
+
+  dimension: number_of_billing_cycles {
+    hidden: yes
+    type: number
+    sql: ${TABLE}.number_of_billing_cycles ;;
+    description: "The number of billing cycles of the subscription."
+  }
+
+  dimension: plan_id {
+    hidden: yes
+    type: number
+    sql: ${TABLE}.plan_id ;;
+    description: "The plan identifier."
+  }
+
+  dimension: quantity {
+    type: number
+    sql: ${TABLE}.quantity ;;
+    description: "The number of times this particular add-on is applied to the subscription."
+  }
+
+  dimension: subscription_id {
+    hidden: yes
+    type: number
+    sql: ${TABLE}.subscription_id ;;
   }
 
   measure: count {
+    label:"Add-On count"
     type: count
-    label: "Number of Masterpass Card Transactions"
-    value_format_name: decimal_0
-    drill_fields: [detail*]
-  }
-
-  set: detail {
-    fields: [
-      cardholder_name,
-      transaction.shipping_address_country_name,
-      transaction.billing_address_country_name,
-      transaction.shipping_address_first_name,
-      transaction.refunded_transaction_id,
-      transaction.shipping_address_last_name,
-      transaction.billing_address_first_name,
-      transaction.billing_address_last_name
-    ]
+    drill_fields: [id, name, subscription.id]
   }
 }

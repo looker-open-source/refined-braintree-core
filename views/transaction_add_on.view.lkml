@@ -1,15 +1,17 @@
-view: subscription_add_on {
-  sql_table_name: @{DATASET_NAME}.SUBSCRIPTION_ADD_ON ;;
+view: transaction_add_on {
+  sql_table_name: @{DATASET_NAME}.TRANSACTION_ADD_ON;;
   drill_fields: [id]
 
   dimension: id {
     primary_key: yes
     type: number
     sql: ${TABLE}.id ;;
+    hidden: yes
   }
 
   dimension: amount {
     type: number
+    hidden: yes
     sql: ${TABLE}.amount ;;
     description: "The add on amount"
   }
@@ -30,7 +32,7 @@ view: subscription_add_on {
     hidden: yes
     type: string
     sql: ${TABLE}.kind ;;
-    description: "The value that defines whether the modification being applied to a plan or subscription is an add-on or a discount. "
+    description: "The value that defines whether the modification being applied to a plan or subscription is an add-on or a discount."
   }
 
   dimension: name {
@@ -52,27 +54,68 @@ view: subscription_add_on {
   }
 
   dimension: plan_id {
-    hidden: yes
     type: number
+    hidden: yes
     sql: ${TABLE}.plan_id ;;
     description: "The plan identifier."
   }
 
   dimension: quantity {
     type: number
+    hidden: yes
     sql: ${TABLE}.quantity ;;
-    description: "The number of times this particular add-on is applied to the subscription."
+    description: "The number of times this particular add-on is applied to the subscription. "
   }
 
-  dimension: subscription_id {
-    hidden: yes
+  dimension: transaction_id {
     type: number
-    sql: ${TABLE}.subscription_id ;;
+    hidden: yes
+    sql: ${TABLE}.transaction_id ;;
   }
 
   measure: count {
-    label: "Add-On count"
     type: count
-    drill_fields: [id, name, subscription.id]
+    label: "Number of Add-Ons"
+    value_format_name: decimal_0
+    drill_fields: [detail*]
+  }
+
+  measure: total_add_on_amount {
+    type: sum
+    sql: ${amount} ;;
+    value_format_name: usd
+  }
+
+  measure: total_add_on_quantity {
+    type: sum
+    sql: ${quantity} ;;
+    value_format_name: decimal_0
+  }
+
+  measure: average_add_on_quantity {
+    type: average
+    sql: ${quantity} ;;
+    value_format_name: decimal_1
+  }
+
+  measure: average_add_on_amount {
+    type: average
+    sql: ${amount} ;;
+    value_format_name: decimal_1
+  }
+
+  # ----- Sets of fields for drilling ------
+  set: detail {
+    fields: [
+      id,
+      name,
+      transaction.shipping_address_country_name,
+      transaction.billing_address_country_name,
+      transaction.shipping_address_first_name,
+      transaction.refunded_transaction_id,
+      transaction.shipping_address_last_name,
+      transaction.billing_address_first_name,
+      transaction.billing_address_last_name
+    ]
   }
 }

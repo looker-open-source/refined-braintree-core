@@ -1,5 +1,6 @@
-view: subscription_discount {
-  sql_table_name: @{DATASET_NAME}.SUBSCRIPTION_DISCOUNT ;;
+view: transaction_discount {
+  sql_table_name: @{DATASET_NAME}.TRANSACTION_DISCOUNT
+    ;;
   drill_fields: [id]
 
   dimension: id {
@@ -10,6 +11,7 @@ view: subscription_discount {
 
   dimension: amount {
     type: number
+    hidden: yes
     sql: ${TABLE}.amount ;;
     description: "The discount amount."
   }
@@ -59,19 +61,36 @@ view: subscription_discount {
 
   dimension: quantity {
     type: number
+    hidden: yes
     sql: ${TABLE}.quantity ;;
     description: "The number of times this particular discount is applied to the subscription."
   }
 
-  dimension: subscription_id {
-    hidden: yes
+  dimension: transaction_id {
     type: number
-    sql: ${TABLE}.subscription_id ;;
+    sql: ${TABLE}.transaction_id ;;
+  }
+
+  measure: total_discount_amount {
+    type: sum
+    sql: ${amount} ;;
+    value_format_name: usd
+  }
+
+  measure: average_discount_amount {
+    type: average
+    sql: ${amount} ;;
+    value_format_name: usd
+  }
+
+  measure: total_quantity {
+    type: sum
+    sql: ${quantity} ;;
+    value_format_name: decimal_0
   }
 
   measure: count {
-    label: "Discount count"
     type: count
-    drill_fields: [id, name, subscription.id]
+    drill_fields: [id, name]
   }
 }

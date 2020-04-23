@@ -1,40 +1,22 @@
-view: subscription_status_history {
-  sql_table_name: @{DATASET_NAME}.SUBSCRIPTION_STATUS_HISTORY ;;
+view: transaction_status_history {
+  sql_table_name: @{DATASET_NAME}.TRANSACTION_STATUS_HISTORY
+    ;;
 
-  dimension: balance {
+  dimension: amount {
     type: number
-    sql: ${TABLE}.balance ;;
-    description: "The balance of the subscription."
-  }
-
-  dimension: price {
-    type: number
-    sql: ${TABLE}.price ;;
-    description: "The price of the subscription."
+    sql: ${TABLE}.amount ;;
   }
 
   dimension: source {
     type: string
     sql: ${TABLE}.source ;;
-    description: "Where the subscription event was created."
+    description: "How a transaction was created"
   }
 
   dimension: status {
     type: string
     sql: ${TABLE}.status ;;
-    description: "The subscription status."
-  }
-
-  dimension: subscription_id {
-    hidden: yes
-    type: number
-    sql: ${TABLE}.subscription_id ;;
-  }
-
-  dimension: user {
-    type: string
-    sql: ${TABLE}.user ;;
-    description: "The Braintree Control Panel username of the person who performed an action that triggered the status change of the subscription."
+    description: "A record of the statuses that a transaction has progressed through."
   }
 
   dimension_group: timestamp {
@@ -54,14 +36,33 @@ view: subscription_status_history {
     sql: ${TABLE}.timestamp ;;
   }
 
-  measure: count {
-    type: count
-    drill_fields: [subscription.id]
+  dimension: transaction_id {
+    type: number
+    # hidden: yes
+    sql: ${TABLE}.transaction_id ;;
   }
 
-  measure: total_balance {
-    type: sum
-    sql: ${balance} ;;
-    value_format_name: usd
+  dimension: user {
+    type: string
+    sql: ${TABLE}.user ;;
+    description: "The Braintree Control Panel username of the person who performed an action that triggered the status change of the transaction."
+  }
+
+  measure: count {
+    type: count
+    drill_fields: [detail*]
+  }
+
+  # ----- Sets of fields for drilling ------
+  set: detail {
+    fields: [
+      transaction.shipping_address_country_name,
+      transaction.billing_address_country_name,
+      transaction.shipping_address_first_name,
+      transaction.refunded_transaction_id,
+      transaction.shipping_address_last_name,
+      transaction.billing_address_first_name,
+      transaction.billing_address_last_name
+    ]
   }
 }

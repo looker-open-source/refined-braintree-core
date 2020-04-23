@@ -1,5 +1,6 @@
-view: customer_address {
-  sql_table_name: @{DATASET_NAME}.CUSTOMER_ADDRESS ;;
+view: registered_customer {
+  sql_table_name: @{DATASET_NAME}.REGISTERED_CUSTOMER
+    ;;
   drill_fields: [id]
 
   dimension: id {
@@ -13,14 +14,26 @@ view: customer_address {
     sql: ${TABLE}.company ;;
   }
 
-  dimension: country_name {
-    type: string
-    sql: ${TABLE}.country_name ;;
+  dimension_group: created {
+    type: time
+    sql: ${TABLE}.created_at ;;
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year,
+      fiscal_month_num,
+      fiscal_quarter,
+      fiscal_quarter_of_year,
+      fiscal_year
+    ]
   }
 
-  dimension: customer_id {
-    type: number
-    sql: ${TABLE}.customer_id ;;
+  dimension: email {
+    type: string
+    sql: ${TABLE}.email ;;
   }
 
   dimension: first_name {
@@ -33,28 +46,40 @@ view: customer_address {
     sql: ${TABLE}.last_name ;;
   }
 
-  dimension: locality {
+  dimension: full_name {
     type: string
-    sql: ${TABLE}.locality ;;
+    sql: CONCAT(${first_name}," ",${last_name}) ;;
   }
 
-  dimension: postal_code {
-    type: number
-    sql: ${TABLE}.postal_code ;;
+  dimension: phone {
+    type: string
+    sql: ${TABLE}.phone ;;
   }
 
-  dimension: region {
-    type: string
-    sql: ${TABLE}.region ;;
+  dimension_group: updated {
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year,
+      fiscal_month_num,
+      fiscal_quarter,
+      fiscal_quarter_of_year,
+      fiscal_year
+    ]
+    type: time
+    sql: ${TABLE}.updated_at ;;
   }
 
-  dimension: street_address {
+  dimension: website {
     type: string
-    sql: ${TABLE}.street_address ;;
+    sql: ${TABLE}.website ;;
   }
 
   measure: count {
     type: count
-    drill_fields: [id, country_name, last_name, first_name]
+    drill_fields: [id, last_name, first_name]
   }
 }

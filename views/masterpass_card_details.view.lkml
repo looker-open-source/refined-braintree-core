@@ -1,39 +1,69 @@
-view: android_pay_details {
-  sql_table_name: @{DATASET_NAME}.ANDROID_PAY_DETAILS ;;
+view: masterpass_card_details {
+  sql_table_name: @{DATASET_NAME}.MASTERPASS_CARD_DETAILS ;;
 
   dimension: bin {
     type: number
     group_label: "Card Details"
     sql: ${TABLE}.bin ;;
-    description: "The first 6 digits of the card number, also known as the Bank Identification Number (BIN). If this Google Pay card is network tokenized, its BIN may differ from the BIN of the underlying source card."
+    description: "The first 6 digits of the credit card, known as the bank identification number (BIN)."
   }
 
   dimension: card_type {
     type: string
-    group_label: "Card Details"
     sql: ${TABLE}.card_type ;;
     description: "The type of the credit card. "
+  }
+
+  dimension: cardholder_name {
+    type: string
+    group_label: "Card Details"
+    sql: ${TABLE}.cardholder_name ;;
+    description: "The cardholder name associated with the credit card."
+  }
+
+  dimension: commercial {
+    type: yesno
+    sql: ${TABLE}.commercial ;;
+    description: "Whether the card type is a commercial card and is capable of processing Level 2 transactions. "
+  }
+
+  dimension: country_of_issuance {
+    type: string
+    group_label: "Card Details"
+    sql: ${TABLE}.country_of_issuance ;;
+    description: "The country that issued the credit card. Possible country values follow ISO 3166-1.The value Unknown will be returned if we cannot immediately determine the card's country of issuance from the bank identification number (BIN)."
+  }
+
+  dimension: debit {
+    type: yesno
+    sql: ${TABLE}.debit ;;
+    description: "Whether the card is a debit card. "
+  }
+
+  dimension: durbin_regulated {
+    type: yesno
+    sql: ${TABLE}.durbin_regulated ;;
+    description: "A value indicating whether the issuing bank's card range is regulated by the Durbin Amendment due to the bank's assets. "
   }
 
   dimension: expiration_month {
     type: string
     group_label: "Card Details"
     sql: ${TABLE}.expiration_month ;;
-    description: "The expiration month of the credit card, formatted MM."
+    description: "The expiration month of a credit card, formatted MM. May be used with expiration_year, and instead of expiration_date."
   }
 
   dimension: expiration_year {
     type: string
     group_label: "Card Details"
     sql: ${TABLE}.expiration_year ;;
-    description: "The 2- or 4-digit year associated with the credit card, formatted YY or YYYY."
+    description: "The two or four digit year associated with a credit card, formatted YYYY or YY. May be used with expiration_month, and instead of expiration_date."
   }
 
-  dimension: google_transaction_id {
-    type: number
-    hidden: yes
-    sql: ${TABLE}.google_transaction_id ;;
-    description: "A unique identifier provided by Google to track the payment method's transactions."
+  dimension: healthcare {
+    type: yesno
+    sql: ${TABLE}.healthcare ;;
+    description: "Whether the card is a healthcare card. "
   }
 
   dimension: image_url {
@@ -42,32 +72,36 @@ view: android_pay_details {
     description: "A URL that points to a payment method image resource (a PNG file) hosted by Braintree."
   }
 
+  dimension: issuing_bank {
+    type: string
+    group_label: "Card Details"
+    sql: ${TABLE}.issuing_bank ;;
+    description: "The bank that issued the credit card."
+  }
+
   dimension: last4 {
     type: number
     group_label: "Card Details"
     sql: ${TABLE}.last4 ;;
-    description: "The last 4 digits of the credit card number."
   }
 
-  dimension: source_card_last4 {
+  dimension: payroll {
+    type: yesno
+    sql: ${TABLE}.payroll ;;
+    description: "Whether the card is a payroll card. "
+  }
+
+  dimension: prepaid {
+    type: yesno
+    sql: ${TABLE}.prepaid ;;
+    description: "Whether the card is a prepaid card. "
+  }
+
+  dimension: product_id {
     type: number
-    group_label: "Source Card Details"
-    sql: ${TABLE}.source_card_last4 ;;
-    description: "The last 4 digits of the payment method tokenized by the network."
-  }
-
-  dimension: source_card_type {
-    type: string
-    group_label: "Source Card Details"
-    sql: ${TABLE}.source_card_type ;;
-    description: "The card type. If this card is network tokenized, this is the card type of the customer's actual card."
-  }
-
-  dimension: source_description {
-    type: string
-    group_label: "Source Card Details"
-    sql: ${TABLE}.source_description ;;
-    description: "Indicates what type of payment method was tokenized by the network. Also includes an identifier for the account (e.g. last 4 digits if the payment method was a credit card)."
+    hidden: yes
+    sql: ${TABLE}.product_id ;;
+    description: "The code for the product type of the card (e.g. D (Visa Signature Preferred), G (Visa Business)). See Product ID codes below for possible values."
   }
 
   dimension: token {
@@ -84,29 +118,16 @@ view: android_pay_details {
     sql: ${TABLE}.transaction_id ;;
   }
 
-  dimension: virtual_card_last4 {
-    type: number
-    group_label: "Virtual Card Details"
-    sql: ${TABLE}.virtual_card_last4 ;;
-    description: "The last 4 digits of the card number. If this card is network tokenized, this is the last 4 digits of the device-specific account number (DPAN)."
-  }
-
-  dimension: virtual_card_type {
-    type: string
-    group_label: "Virtual Card Details"
-    sql: ${TABLE}.virtual_card_type ;;
-    description: "The card type. If this card is network tokenized, this is the card type of the network tokenized card."
-  }
-
   measure: count {
-    label: "Number of Android Pay Transactions"
-    value_format_name: decimal_0
     type: count
+    label: "Number of Masterpass Card Transactions"
+    value_format_name: decimal_0
     drill_fields: [detail*]
   }
 
   set: detail {
     fields: [
+      cardholder_name,
       transaction.shipping_address_country_name,
       transaction.billing_address_country_name,
       transaction.shipping_address_first_name,

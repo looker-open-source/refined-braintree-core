@@ -1,4 +1,4 @@
-explore: subscription_core {
+explore: subscription {
   from: subscription
   extension: required
   join: transaction {
@@ -7,7 +7,7 @@ explore: subscription_core {
     fields: [-transaction.tender]
   }
   join: registered_customer {
-    sql_on: ${transaction.customer_id} = ${registered_customer.id};;
+    sql_on: ${transaction.customer_id} = ${registered_customer.id} ;;
     relationship: many_to_one
   }
   join: customer_address {

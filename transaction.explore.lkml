@@ -1,4 +1,4 @@
-explore: transaction_core {
+explore: transaction {
   from: transaction
   extension: required
   join: paypal_details {

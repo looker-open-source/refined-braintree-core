@@ -1,174 +1,140 @@
-view: merchant_account {
-  sql_table_name: @{DATASET_NAME}.MERCHANT_ACCOUNT ;;
-  drill_fields: [id]
+view: masterpass_card_details {
+  sql_table_name: @{DATASET_NAME}.MASTERPASS_CARD_DETAILS ;;
 
-  dimension: id {
-    primary_key: yes
+  dimension: bin {
     type: number
-    sql: ${TABLE}.id ;;
-    description: "Specifies the ID of the sub-merchant, which can be referenced when creating transactions with service fees."
+    group_label: "Card Details"
+    sql: ${TABLE}.bin ;;
+    description: "The first 6 digits of the credit card, known as the bank identification number (BIN)."
   }
 
-  dimension: address_company {
-    group_label: "Address"
-    label: "Company"
+  dimension: card_type {
     type: string
-    sql: ${TABLE}.address_company ;;
+    sql: ${TABLE}.card_type ;;
+    description: "The type of the credit card. "
   }
 
-  dimension: address_country_name {
-    group_label: "Address"
-    label: "County Name"
+  dimension: cardholder_name {
     type: string
-    sql: ${TABLE}.address_country_name ;;
+    group_label: "Card Details"
+    sql: ${TABLE}.cardholder_name ;;
+    description: "The cardholder name associated with the credit card."
   }
 
-  dimension: address_first_name {
-    group_label: "Address"
-    label: "First Name"
-    type: string
-    sql: ${TABLE}.address_first_name ;;
-  }
-
-  dimension: address_last_name {
-    group_label: "Address"
-    label: "Last Name"
-    type: string
-    sql: ${TABLE}.address_last_name ;;
-  }
-
-  dimension: address_locality {
-    group_label: "Address"
-    label: "Locality"
-    type: string
-    sql: ${TABLE}.address_locality ;;
-  }
-
-  dimension: address_postal_code {
-    group_label: "Address"
-    label: "Postal Code"
-    type: number
-    sql: ${TABLE}.address_postal_code ;;
-  }
-
-  dimension: address_region {
-    group_label: "Address"
-    label: "Region"
-    type: string
-    sql: ${TABLE}.address_region ;;
-  }
-
-  dimension: address_street_address {
-    group_label: "Address"
-    label: "Street Address"
-    type: string
-    sql: ${TABLE}.address_street_address ;;
-  }
-
-  dimension: currency_iso_code {
-    type: string
-    sql: ${TABLE}.currency_iso_code ;;
-    description: "The ISO code for the currency the merchant account uses. See the ISO 4217 codes."
-  }
-
-  dimension: date_of_birth {
-    type: string
-    sql: ${TABLE}.date_of_birth ;;
-    description: "The applicant's date of birth."
-  }
-
-  dimension: email {
-    type: string
-    sql: ${TABLE}.email ;;
-    description: "Email address composed of ASCII characters."
-  }
-
-  dimension: first_name {
-    type: string
-    sql: ${TABLE}.first_name ;;
-    description: "The first name."
-  }
-
-  dimension: funding_details_account_number_last4 {
-    group_label: "Funding Details"
-    label: "Last 4"
-    type: number
-    sql: ${TABLE}.funding_details_account_number_last4 ;;
-  }
-
-  dimension: funding_details_descriptor {
-    group_label: "Funding Details"
-    label: "Descriptor"
-    type: string
-    sql: ${TABLE}.funding_details_descriptor ;;
-  }
-
-  dimension: funding_details_destination {
-    group_label: "Funding Details"
-    label: "Destination"
-    type: string
-    sql: ${TABLE}.funding_details_destination ;;
-  }
-
-  dimension: funding_details_email {
-    group_label: "Funding Details"
-    label: "Email"
-    type: string
-    sql: ${TABLE}.funding_details_email ;;
-  }
-
-  dimension: funding_details_mobile_phone {
-    group_label: "Funding Details"
-    label: "Mobile Phone"
-    type: string
-    sql: ${TABLE}.funding_details_mobile_phone ;;
-  }
-
-  dimension: funding_details_routing_number {
-    group_label: "Funding Details"
-    label: "Routing Number"
-    type: number
-    sql: ${TABLE}.funding_details_routing_number ;;
-  }
-
-  dimension: is_default {
+  dimension: commercial {
     type: yesno
-    sql: ${TABLE}.is_default ;;
+    sql: ${TABLE}.commercial ;;
+    description: "Whether the card type is a commercial card and is capable of processing Level 2 transactions. "
   }
 
-  dimension: last_name {
+  dimension: country_of_issuance {
     type: string
-    sql: ${TABLE}.last_name ;;
-    description: "The last name."
+    group_label: "Card Details"
+    sql: ${TABLE}.country_of_issuance ;;
+    description: "The country that issued the credit card. Possible country values follow ISO 3166-1.The value Unknown will be returned if we cannot immediately determine the card's country of issuance from the bank identification number (BIN)."
   }
 
-  dimension: phone {
-    type: string
-    sql: ${TABLE}.phone ;;
-    description: "The phone number."
+  dimension: debit {
+    type: yesno
+    sql: ${TABLE}.debit ;;
+    description: "Whether the card is a debit card. "
   }
 
-  dimension: status {
+  dimension: durbin_regulated {
+    type: yesno
+    sql: ${TABLE}.durbin_regulated ;;
+    description: "A value indicating whether the issuing bank's card range is regulated by the Durbin Amendment due to the bank's assets. "
+  }
+
+  dimension: expiration_month {
     type: string
-    sql: ${TABLE}.status ;;
-    description: "The state of the merchant account can either be Pending, Active, or Suspended."
+    group_label: "Card Details"
+    sql: ${TABLE}.expiration_month ;;
+    description: "The expiration month of a credit card, formatted MM. May be used with expiration_year, and instead of expiration_date."
+  }
+
+  dimension: expiration_year {
+    type: string
+    group_label: "Card Details"
+    sql: ${TABLE}.expiration_year ;;
+    description: "The two or four digit year associated with a credit card, formatted YYYY or YY. May be used with expiration_month, and instead of expiration_date."
+  }
+
+  dimension: healthcare {
+    type: yesno
+    sql: ${TABLE}.healthcare ;;
+    description: "Whether the card is a healthcare card. "
+  }
+
+  dimension: image_url {
+    type: string
+    sql: ${TABLE}.image_url ;;
+    description: "A URL that points to a payment method image resource (a PNG file) hosted by Braintree."
+  }
+
+  dimension: issuing_bank {
+    type: string
+    group_label: "Card Details"
+    sql: ${TABLE}.issuing_bank ;;
+    description: "The bank that issued the credit card."
+  }
+
+  dimension: last4 {
+    type: number
+    group_label: "Card Details"
+    sql: ${TABLE}.last4 ;;
+  }
+
+  dimension: payroll {
+    type: yesno
+    sql: ${TABLE}.payroll ;;
+    description: "Whether the card is a payroll card. "
+  }
+
+  dimension: prepaid {
+    type: yesno
+    sql: ${TABLE}.prepaid ;;
+    description: "Whether the card is a prepaid card. "
+  }
+
+  dimension: product_id {
+    type: number
+    hidden: yes
+    sql: ${TABLE}.product_id ;;
+    description: "The code for the product type of the card (e.g. D (Visa Signature Preferred), G (Visa Business)). See Product ID codes below for possible values."
+  }
+
+  dimension: token {
+    type: number
+    group_label: "Card Details"
+    sql: ${TABLE}.token ;;
+    description: "An alphanumeric value that references a specific payment method stored in your Vault."
+  }
+
+  dimension: transaction_id {
+    type: number
+    hidden: yes
+    primary_key: yes
+    sql: ${TABLE}.transaction_id ;;
   }
 
   measure: count {
     type: count
+    label: "Number of Masterpass Card Transactions"
+    value_format_name: decimal_0
     drill_fields: [detail*]
   }
 
   set: detail {
     fields: [
-      id,
-      address_last_name,
-      address_first_name,
-      last_name,
-      address_country_name,
-      first_name,
-      subscription.count,
-      transaction.count
+      cardholder_name,
+      transaction.shipping_address_country_name,
+      transaction.billing_address_country_name,
+      transaction.shipping_address_first_name,
+      transaction.refunded_transaction_id,
+      transaction.shipping_address_last_name,
+      transaction.billing_address_first_name,
+      transaction.billing_address_last_name
     ]
   }
 }

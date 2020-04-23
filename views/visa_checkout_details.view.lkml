@@ -1,21 +1,68 @@
-view: transaction_status_history {
-  sql_table_name: @{DATASET_NAME}.TRANSACTION_STATUS_HISTORY ;;
+view: transaction_discount {
+  sql_table_name: @{DATASET_NAME}.TRANSACTION_DISCOUNT ;;
+  drill_fields: [id]
+
+  dimension: id {
+    primary_key: yes
+    type: number
+    sql: ${TABLE}.id ;;
+  }
 
   dimension: amount {
     type: number
+    hidden: yes
     sql: ${TABLE}.amount ;;
+    description: "The discount amount."
   }
 
-  dimension: source {
-    type: string
-    sql: ${TABLE}.source ;;
-    description: "How a transaction was created"
+  dimension: current_billing_cycle {
+    type: number
+    sql: ${TABLE}.current_billing_cycle ;;
+    description: "The discount's current billing cycle. It is incremented each time the discount is successfully applied."
   }
 
-  dimension: status {
+  dimension: description {
     type: string
-    sql: ${TABLE}.status ;;
-    description: "A record of the statuses that a transaction has progressed through."
+    sql: ${TABLE}.description ;;
+    description: "A description of the discount."
+  }
+
+  dimension: kind {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.kind ;;
+    description: "The value that defines whether the modification being applied to a plan or subscription is an add-on or a discount."
+  }
+
+  dimension: name {
+    type: string
+    sql: ${TABLE}.name ;;
+    description: "The name of the discount."
+  }
+
+  dimension: never_expires {
+    type: yesno
+    sql: ${TABLE}.never_expires ;;
+    description: "A value indicating whether a discount's billing cycle is set to never expire instead of running for a specific number of billing cycles."
+  }
+
+  dimension: number_of_billing_cycles {
+    type: number
+    sql: ${TABLE}.number_of_billing_cycles ;;
+    description: "Specifies the number of billing cycles of the discount."
+  }
+
+  dimension: plan_id {
+    hidden: yes
+    type: number
+    sql: ${TABLE}.plan_id ;;
+  }
+
+  dimension: quantity {
+    type: number
+    hidden: yes
+    sql: ${TABLE}.quantity ;;
+    description: "The number of times this particular discount is applied to the subscription."
   }
 
   dimension: transaction_id {
@@ -23,43 +70,20 @@ view: transaction_status_history {
     sql: ${TABLE}.transaction_id ;;
   }
 
-  dimension: user {
-    type: string
-    sql: ${TABLE}.user ;;
-    description: "The Braintree Control Panel username of the person who performed an action that triggered the status change of the transaction."
+  measure: total_discount_amount {
+    type: sum
+    sql: ${amount} ;;
+    value_format_name: usd
   }
 
-  dimension_group: timestamp {
-    type: time
-    timeframes: [
-      raw,
-      date,
-      week,
-      month,
-      quarter,
-      year,
-      fiscal_month_num,
-      fiscal_quarter,
-      fiscal_quarter_of_year,
-      fiscal_year
-    ]
-    sql: ${TABLE}.timestamp ;;
+  measure: total_quantity {
+    type: sum
+    sql: ${quantity} ;;
+    value_format_name: decimal_0
   }
 
   measure: count {
     type: count
-    drill_fields: [detail*]
-  }
-
-  set: detail {
-    fields: [
-      transaction.shipping_address_country_name,
-      transaction.billing_address_country_name,
-      transaction.shipping_address_first_name,
-      transaction.refunded_transaction_id,
-      transaction.shipping_address_last_name,
-      transaction.billing_address_first_name,
-      transaction.billing_address_last_name
-    ]
+    drill_fields: [id, name]
   }
 }

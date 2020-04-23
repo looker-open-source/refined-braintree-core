@@ -1,28 +1,66 @@
-view: subscription_status_history {
-  sql_table_name: @{DATASET_NAME}.SUBSCRIPTION_STATUS_HISTORY ;;
+view: subscription_discount {
+  sql_table_name: @{DATASET_NAME}.SUBSCRIPTION_DISCOUNT ;;
+  drill_fields: [id]
 
-  dimension: balance {
+  dimension: id {
+    primary_key: yes
     type: number
-    sql: ${TABLE}.balance ;;
-    description: "The balance of the subscription."
+    sql: ${TABLE}.id ;;
   }
 
-  dimension: price {
+  dimension: amount {
     type: number
-    sql: ${TABLE}.price ;;
-    description: "The price of the subscription."
+    sql: ${TABLE}.amount ;;
+    description: "The discount amount."
   }
 
-  dimension: source {
-    type: string
-    sql: ${TABLE}.source ;;
-    description: "Where the subscription event was created."
+  dimension: current_billing_cycle {
+    type: number
+    sql: ${TABLE}.current_billing_cycle ;;
+    description: "The discount's current billing cycle. It is incremented each time the discount is successfully applied."
   }
 
-  dimension: status {
+  dimension: description {
     type: string
-    sql: ${TABLE}.status ;;
-    description: "The subscription status."
+    sql: ${TABLE}.description ;;
+    description: "A description of the discount."
+  }
+
+  dimension: kind {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.kind ;;
+    description: "The value that defines whether the modification being applied to a plan or subscription is an add-on or a discount."
+  }
+
+  dimension: name {
+    type: string
+    sql: ${TABLE}.name ;;
+    description: "The name of the discount."
+  }
+
+  dimension: never_expires {
+    type: yesno
+    sql: ${TABLE}.never_expires ;;
+    description: "A value indicating whether a discount's billing cycle is set to never expire instead of running for a specific number of billing cycles."
+  }
+
+  dimension: number_of_billing_cycles {
+    type: number
+    sql: ${TABLE}.number_of_billing_cycles ;;
+    description: "Specifies the number of billing cycles of the discount."
+  }
+
+  dimension: plan_id {
+    hidden: yes
+    type: number
+    sql: ${TABLE}.plan_id ;;
+  }
+
+  dimension: quantity {
+    type: number
+    sql: ${TABLE}.quantity ;;
+    description: "The number of times this particular discount is applied to the subscription."
   }
 
   dimension: subscription_id {
@@ -31,37 +69,9 @@ view: subscription_status_history {
     sql: ${TABLE}.subscription_id ;;
   }
 
-  dimension: user {
-    type: string
-    sql: ${TABLE}.user ;;
-    description: "The Braintree Control Panel username of the person who performed an action that triggered the status change of the subscription."
-  }
-
-  dimension_group: timestamp {
-    type: time
-    timeframes: [
-      raw,
-      date,
-      week,
-      month,
-      quarter,
-      year,
-      fiscal_month_num,
-      fiscal_quarter,
-      fiscal_quarter_of_year,
-      fiscal_year
-    ]
-    sql: ${TABLE}.timestamp ;;
-  }
-
   measure: count {
+    label: "Discount count"
     type: count
-    drill_fields: [subscription.id]
-  }
-
-  measure: total_balance {
-    type: sum
-    sql: ${balance} ;;
-    value_format_name: usd
+    drill_fields: [id, name, subscription.id]
   }
 }

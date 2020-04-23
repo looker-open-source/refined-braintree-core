@@ -1,28 +1,60 @@
-view: dispute_ndt {
-  derived_table: {
-    explore_source: transaction {
-      column: count {
-        field: dispute.count
-      }
+view: customer_address {
+  sql_table_name: @{DATASET_NAME}.CUSTOMER_ADDRESS ;;
+  drill_fields: [id]
 
-      column: reason_display {
-        field: dispute.reason_display
-      }
-
-      filters: {
-        field: dispute.reason_display
-        value: "-NULL"
-      }
-    }
-  }
-
-  dimension: count {
-    hidden: yes
-    label: "Dispute Number of Disputes"
+  dimension: id {
+    primary_key: yes
     type: number
+    sql: ${TABLE}.id ;;
   }
 
-  dimension: reason_display {
-    hidden: yes
+  dimension: company {
+    type: string
+    sql: ${TABLE}.company ;;
+  }
+
+  dimension: country_name {
+    type: string
+    sql: ${TABLE}.country_name ;;
+  }
+
+  dimension: customer_id {
+    type: number
+    sql: ${TABLE}.customer_id ;;
+  }
+
+  dimension: first_name {
+    type: string
+    sql: ${TABLE}.first_name ;;
+  }
+
+  dimension: last_name {
+    type: string
+    sql: ${TABLE}.last_name ;;
+  }
+
+  dimension: locality {
+    type: string
+    sql: ${TABLE}.locality ;;
+  }
+
+  dimension: postal_code {
+    type: number
+    sql: ${TABLE}.postal_code ;;
+  }
+
+  dimension: region {
+    type: string
+    sql: ${TABLE}.region ;;
+  }
+
+  dimension: street_address {
+    type: string
+    sql: ${TABLE}.street_address ;;
+  }
+
+  measure: count {
+    type: count
+    drill_fields: [id, country_name, last_name, first_name]
   }
 }

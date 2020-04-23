@@ -24,7 +24,7 @@
   "auxiliary_projects": [
     {
       "git_uri": "git://github.com/llooker/refined-braintree-config.git",
-      "git_ref": "4f10cf59aeccbf88292f6d5e142ba567912ed4df",
+      "git_ref": "72442b3fa158578761e7b4d920af5d4a5a92533a",
       "label": "Braintree Config",
       "constant_name": "CONFIG_PROJECT_NAME"
     }

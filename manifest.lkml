@@ -13,6 +13,6 @@ constant: CONNECTION_NAME {
 }
 
 constant: CONFIG_PROJECT_NAME {
-  value: "refinement-braintree-core"
-  export: override_required
+  value: "refinement-braintree-config"
+  export: override_optional
 }

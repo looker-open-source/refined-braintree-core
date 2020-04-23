@@ -1,52 +1,61 @@
-view: venmo_details {
-  sql_table_name: @{DATASET_NAME}.VENMO_DETAILS ;;
+view: unregistered_customer {
+  sql_table_name: @{DATASET_NAME}.UNREGISTERED_CUSTOMER ;;
+  drill_fields: [id]
 
-  dimension: image_url {
-    type: string
-    sql: ${TABLE}.image_url ;;
-    description: "A URL that points to a payment method image resource (a PNG file) hosted by Braintree."
-  }
-
-  dimension: source_description {
-    type: string
-    sql: ${TABLE}.source_description ;;
-    description: "A short description of the payment method, including the Venmo username."
-  }
-
-  dimension: token {
+  dimension: id {
+    primary_key: yes
     type: number
-    sql: ${TABLE}.token ;;
-    description: "An alphanumeric value that references a specific payment method stored in your Vault."
+    sql: ${TABLE}.id ;;
+  }
+
+  dimension: company {
+    type: string
+    sql: ${TABLE}.company ;;
+  }
+
+  dimension: email {
+    type: string
+    sql: ${TABLE}.email ;;
+  }
+
+  dimension: first_name {
+    type: string
+    sql: ${TABLE}.first_name ;;
+  }
+
+  dimension: last_name {
+    type: string
+    sql: ${TABLE}.last_name ;;
+  }
+
+  dimension: phone {
+    type: string
+    sql: ${TABLE}.phone ;;
   }
 
   dimension: transaction_id {
     type: number
     hidden: yes
-    primary_key: yes
     sql: ${TABLE}.transaction_id ;;
   }
 
-  dimension: username {
+  dimension: website {
     type: string
-    sql: ${TABLE}.username ;;
-    description: "The Venmo username of the Venmo account."
-  }
-
-  dimension: venmo_user_id {
-    type: number
-    sql: ${TABLE}.venmo_user_id ;;
-    description: "The Venmo user ID of the Venmo account."
+    sql: ${TABLE}.website ;;
   }
 
   measure: count {
     type: count
-    label: "Number of Venmo Transactions"
+    label: "Number of Unregistered Customers"
+    value_format_name: decimal_0
     drill_fields: [detail*]
   }
 
   set: detail {
     fields: [
-      username,
+      id,
+      last_name,
+      first_name,
       transaction.shipping_address_country_name,
       transaction.billing_address_country_name,
       transaction.shipping_address_first_name,

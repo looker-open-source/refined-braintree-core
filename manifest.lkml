@@ -11,3 +11,8 @@ constant: CONNECTION_NAME {
   value: "brick-layer"
   export: override_optional
 }
+
+constant: CONFIG_PROJECT_NAME {
+  value: "refinement-braintree-core"
+  export: override_required
+}

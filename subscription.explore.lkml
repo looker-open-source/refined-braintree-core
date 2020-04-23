@@ -1,6 +1,6 @@
-include: "/views/*"
-
-explore: subscription {
+explore: subscription_core {
+  from: subscription
+  extension: required
   join: transaction {
     sql_on: ${subscription.id} = ${transaction.subscription_id} ;;
     relationship: one_to_many
@@ -30,6 +30,5 @@ explore: subscription {
     sql_on: ${subscription.merchant_account_id} = ${merchant_account.id} ;;
     relationship: many_to_one
   }
-
 
 }

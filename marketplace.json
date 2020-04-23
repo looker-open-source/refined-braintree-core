@@ -11,19 +11,13 @@
       "label": "Connection Name",
       "value_constraint": "connection"
     },
-    "SCHEMA_NAME": {
-      "label": "Braintree Schema Name"
-    },
     "DATASET_NAME": {
       "label": "Braintree Dataset Name"
-    },
-    "CONFIG_PROJECT_NAME": {
-      "label": "Config Project Name"
     }
   },
   "models": [
     {
-      "name": "block_braintree",
+      "name": "refiend-braintree",
       "connection_constant": "CONNECTION_NAME"
     }
   ],

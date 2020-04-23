@@ -29,8 +29,8 @@
   ],
   "auxiliary_projects": [
     {
-      "git_uri": "git://github.com/looker/block-braintree-config.git",
-      "git_ref": "0a117ef05a82d135f4eed631ebac95c256c784de",
+      "git_uri": "git://github.com/thomasbanghart/block-braintree-config.git",
+      "git_ref": "28deda6bf5f0d2a77ce3b25468721c7374053a80",
       "label": "Braintree Config",
       "constant_name": "CONFIG_PROJECT_NAME"
     }

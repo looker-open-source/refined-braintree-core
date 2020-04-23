@@ -1,6 +1,6 @@
+include: "/views/*"
+
 explore: subscription {
-  from: subscription
-  extension: required
   join: transaction {
     sql_on: ${subscription.id} = ${transaction.subscription_id} ;;
     relationship: one_to_many

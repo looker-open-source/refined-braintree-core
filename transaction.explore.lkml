@@ -1,6 +1,6 @@
+include: "/views/*"
+
 explore: transaction {
-  from: transaction
-  extension: required
   join: paypal_details {
     sql_on: ${transaction.id} = ${paypal_details.transaction_id} ;;
     relationship: many_to_one

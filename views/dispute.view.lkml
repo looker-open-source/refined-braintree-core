@@ -1,112 +1,129 @@
-view: android_pay_details {
-  sql_table_name: @{DATASET_NAME}.ANDROID_PAY_DETAILS ;;
+view: dispute {
+  sql_table_name: @{DATASET_NAME}.DISPUTE ;;
 
-  dimension: bin {
-    type: number
-    group_label: "Card Details"
-    sql: ${TABLE}.bin ;;
-    description: "The first 6 digits of the card number, also known as the Bank Identification Number (BIN). If this Google Pay card is network tokenized, its BIN may differ from the BIN of the underlying source card."
-  }
-
-  dimension: card_type {
-    type: string
-    group_label: "Card Details"
-    sql: ${TABLE}.card_type ;;
-    description: "The type of the credit card. "
-  }
-
-  dimension: expiration_month {
-    type: string
-    group_label: "Card Details"
-    sql: ${TABLE}.expiration_month ;;
-    description: "The expiration month of the credit card, formatted MM."
-  }
-
-  dimension: expiration_year {
-    type: string
-    group_label: "Card Details"
-    sql: ${TABLE}.expiration_year ;;
-    description: "The 2- or 4-digit year associated with the credit card, formatted YY or YYYY."
-  }
-
-  dimension: google_transaction_id {
+  dimension: amount {
     type: number
     hidden: yes
-    sql: ${TABLE}.google_transaction_id ;;
-    description: "A unique identifier provided by Google to track the payment method's transactions."
+    sql: ${TABLE}.amount ;;
+    description: "The billing amount of the request."
   }
 
-  dimension: image_url {
+  dimension: kind {
     type: string
-    sql: ${TABLE}.image_url ;;
-    description: "A URL that points to a payment method image resource (a PNG file) hosted by Braintree."
+    sql: ${TABLE}.kind ;;
+    description: "The kind of dispute. "
   }
 
-  dimension: last4 {
-    type: number
-    group_label: "Card Details"
-    sql: ${TABLE}.last4 ;;
-    description: "The last 4 digits of the credit card number."
+  dimension_group: opened {
+    type: time
+    sql: PARSE_TIMESTAMP("%F", ${TABLE}.opened_date) ;;
+    timeframes: [
+      raw,
+      date,
+      week,
+      week_of_year,
+      month,
+      quarter,
+      year,
+      fiscal_month_num,
+      fiscal_quarter,
+      fiscal_quarter_of_year,
+      fiscal_year
+    ]
   }
 
-  dimension: source_card_last4 {
-    type: number
-    group_label: "Source Card Details"
-    sql: ${TABLE}.source_card_last4 ;;
-    description: "The last 4 digits of the payment method tokenized by the network."
-  }
-
-  dimension: source_card_type {
+  dimension: reason {
     type: string
-    group_label: "Source Card Details"
-    sql: ${TABLE}.source_card_type ;;
-    description: "The card type. If this card is network tokenized, this is the card type of the customer's actual card."
+    sql: ${TABLE}.reason ;;
+    description: "The reason the dispute was created. "
   }
 
-  dimension: source_description {
+  dimension: reason_display {
     type: string
-    group_label: "Source Card Details"
-    sql: ${TABLE}.source_description ;;
-    description: "Indicates what type of payment method was tokenized by the network. Also includes an identifier for the account (e.g. last 4 digits if the payment method was a credit card)."
+    sql:
+    CASE WHEN ${reason} = "cancelled_recurring_transaction" THEN "Canceled Recurring Transaction"
+         WHEN ${reason} = "credit_not_processed" THEN "Credit Not Processed"
+         WHEN ${reason} = "duplicate" THEN "Duplicate"
+         WHEN ${reason} = "fraud" THEN "Fraud"
+         WHEN ${reason} = "general" THEN "General"
+         WHEN ${reason} = "invalid_account" THEN "Invalid Account"
+         WHEN ${reason} = "not_recognized" THEN "Not Recognized"
+         WHEN ${reason} = "product_not_received" THEN "Product Not Received"
+         WHEN ${reason} = "product_unsatisfactory" THEN "Product Unsatisfactory"
+         WHEN ${reason} = "transaction_amount_differs" THEN "Transaction Amount Differs"
+         ELSE NULL END
+        ;;
   }
 
-  dimension: token {
-    type: number
-    group_label: "Card Details"
-    sql: ${TABLE}.token ;;
-    description: "An alphanumeric value that references a specific payment method stored in your Vault."
+  dimension_group: received {
+    type: time
+    sql: ${TABLE}.received_date ;;
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year,
+      fiscal_month_num,
+      fiscal_quarter,
+      fiscal_quarter_of_year,
+      fiscal_year
+    ]
+    description: "The date the dispute was received by the merchant."
+  }
+
+  dimension_group: reply_by {
+    type: time
+    timeframes: [raw, date, month, year]
+    sql: PARSE_TIMESTAMP("%F", ${TABLE}.reply_by_date) ;;
+    description: "The merchant Reply By date that is referenced in the gateway."
+  }
+
+  dimension_group: to_reply {
+    type: duration
+    intervals: [day, month]
+    sql_start: ${transaction.today_raw} ;;
+    sql_end: ${reply_by_raw} ;;
+    description: "Time between a dispute's open date and reply by date"
+  }
+
+  dimension: status {
+    type: string
+    sql: ${TABLE}.status ;;
+    description: "The status of the dispute. "
   }
 
   dimension: transaction_id {
+    primary_key: yes
     type: number
     hidden: yes
-    primary_key: yes
     sql: ${TABLE}.transaction_id ;;
   }
 
-  dimension: virtual_card_last4 {
-    type: number
-    group_label: "Virtual Card Details"
-    sql: ${TABLE}.virtual_card_last4 ;;
-    description: "The last 4 digits of the card number. If this card is network tokenized, this is the last 4 digits of the device-specific account number (DPAN)."
-  }
-
-  dimension: virtual_card_type {
-    type: string
-    group_label: "Virtual Card Details"
-    sql: ${TABLE}.virtual_card_type ;;
-    description: "The card type. If this card is network tokenized, this is the card type of the network tokenized card."
+  dimension_group: won {
+    type: time
+    timeframes: [raw, date, month, year]
+    sql: PARSE_TIMESTAMP("%F", ${TABLE}.won_date) ;;
   }
 
   measure: count {
-    label: "Number of Android Pay Transactions"
-    value_format_name: decimal_0
     type: count
+    label: "Number of Disputes"
     drill_fields: [detail*]
   }
 
+  measure: total_dispute_amount {
+    type: sum
+    sql: ${amount} ;;
+    value_format_name: usd
+    drill_fields: [detail*]
+  }
+
+  # ----- Sets of fields for drilling ------
   set: detail {
     fields: [
+      transaction.id,
       transaction.shipping_address_country_name,
       transaction.billing_address_country_name,
       transaction.shipping_address_first_name,
@@ -116,4 +133,24 @@ view: android_pay_details {
       transaction.billing_address_last_name
     ]
   }
+}
+
+
+view: dispute_ndt {
+  derived_table: {
+    explore_source: transaction {
+      column: count { field: dispute.count }
+      column: reason_display { field: dispute.reason_display }
+      filters: {
+        field: dispute.reason_display
+        value: "-NULL"
+      }
+    }
+  }
+  dimension: count {
+    hidden: yes
+    label: "Dispute Number of Disputes"
+    type: number
+  }
+  dimension: reason_display { hidden:yes }
 }

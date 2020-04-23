@@ -3,7 +3,7 @@
   "category_label": "Models",
   "branding": {
     "image_uri": "https://marketplace-api.looker.com/block-icons/braze_icon.png",
-    "tagline": "Bring your transaction data to life using the Braintree Block."
+    "tagline": ""
   },
 
   "constants": {
@@ -13,18 +13,21 @@
     },
     "DATASET_NAME": {
       "label": "Braintree Dataset Name"
+    },
+    "CONFIG_PROJECT_NAME": {
+      "label": "Config Project Name"
     }
   },
   "models": [
     {
-      "name": "refiend-braintree",
+      "name": "block_braintree",
       "connection_constant": "CONNECTION_NAME"
     }
   ],
   "auxiliary_projects": [
     {
       "git_uri": "git://github.com/llooker/refined-braintree-config.git",
-      "git_ref": "5cf3d6597051ab1c9cb01fcfeb0954a342e3fd83",
+      "git_ref": "05cf3d6597051ab1c9cb01fcfeb0954a342e3fd83",
       "label": "Braintree Config",
       "constant_name": "CONFIG_PROJECT_NAME"
     }

@@ -4,10 +4,10 @@ project_name: "refinement-braintree-core"
 
 constant: DATASET_NAME {
   value: "braintree"
-  export: override_required
+  export: override_optional
 }
 
 constant: CONNECTION_NAME {
   value: "brick-layer"
-  export: override_required
+  export: override_optional
 }

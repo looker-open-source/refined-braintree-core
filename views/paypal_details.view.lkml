@@ -1,128 +1,157 @@
-view: paypal_details {
-  sql_table_name: @{DATASET_NAME}.PAYPAL_DETAILS ;;
+view: merchant_account {
+  sql_table_name: @{DATASET_NAME}.MERCHANT_ACCOUNT ;;
+  drill_fields: [id]
 
-  dimension: authorization_id {
-    type: number
-    hidden: yes
-    sql: ${TABLE}.authorization_id ;;
-    description: "The identification value of the authorization within PayPal's API."
-  }
-
-  dimension: capture_id {
-    type: number
-    hidden: yes
-    sql: ${TABLE}.capture_id ;;
-    description: "PayPal id for a transaction."
-  }
-
-  dimension: custom_field {
-    type: string
-    sql: ${TABLE}.custom_field ;;
-    description: "Custom field/value pairs."
-  }
-
-  dimension: debug_id {
-    type: number
-    hidden: yes
-    sql: ${TABLE}.debug_id ;;
-  }
-
-  dimension: description {
-    type: string
-    sql: ${TABLE}.description ;;
-  }
-
-  dimension: image_url {
-    type: string
-    sql: ${TABLE}.image_url ;;
-    description: "A URL that points to a payment method image resource (a PNG file) hosted by Braintree."
-  }
-
-  dimension: payee_email {
-    type: string
-    sql: ${TABLE}.payee_email ;;
-  }
-
-  dimension: payer_email {
-    type: string
-    group_label: "Payer"
-    sql: ${TABLE}.payer_email ;;
-  }
-
-  dimension: payer_first_name {
-    type: string
-    group_label: "Payer"
-    sql: ${TABLE}.payer_first_name ;;
-  }
-
-  dimension: payer_id {
-    type: number
-    hidden: yes
-    sql: ${TABLE}.payer_id ;;
-    description: "The ID belonging to the PayPal account."
-  }
-
-  dimension: payer_last_name {
-    type: string
-    group_label: "Payer"
-    sql: ${TABLE}.payer_last_name ;;
-  }
-
-  dimension: payer_status {
-    type: string
-    group_label: "Payer"
-    sql: ${TABLE}.payer_status ;;
-  }
-
-  dimension: payment_id {
-    type: number
-    hidden: yes
-    sql: ${TABLE}.payment_id ;;
-    description: "The identification value of the payment within PayPal's API."
-  }
-
-  dimension: refund_id {
-    type: number
-    hidden: yes
-    sql: ${TABLE}.refund_id ;;
-    description: "PayPal id for a refund."
-  }
-
-  dimension: seller_protection_status {
-    type: string
-    sql: ${TABLE}.seller_protection_status ;;
-    description: "Indicates whether a transaction qualifies for PayPal Seller Protection."
-  }
-
-  dimension: token {
-    type: number
-    sql: ${TABLE}.token ;;
-    description: "An alphanumeric value that references a specific payment method stored in your Vault."
-  }
-
-  dimension: transaction_fee_amount {
-    type: number
-    sql: ${TABLE}.transaction_fee_amount ;;
-    description: "The transaction fee amount of the PayPal transaction."
-  }
-
-  dimension: transaction_fee_currency_iso_code {
-    type: string
-    sql: ${TABLE}.transaction_fee_currency_iso_code ;;
-    description: "The currency of the associated transaction fee."
-  }
-
-  dimension: transaction_id {
-    type: number
+  dimension: id {
     primary_key: yes
-    hidden: yes
-    sql: ${TABLE}.transaction_id ;;
+    type: number
+    sql: ${TABLE}.id ;;
+    description: "Specifies the ID of the sub-merchant, which can be referenced when creating transactions with service fees."
   }
 
-  measure: total_transaction_fee {
-    type: sum
-    sql: ${transaction_fee_amount} ;;
-    value_format_name: usd
+  dimension: address_company {
+    group_label: "Address"
+    label: "Company"
+    type: string
+    sql: ${TABLE}.address_company ;;
+  }
+
+  dimension: address_country_name {
+    group_label: "Address"
+    label: "County Name"
+    type: string
+    sql: ${TABLE}.address_country_name ;;
+  }
+
+  dimension: address_first_name {
+    group_label: "Address"
+    label: "First Name"
+    type: string
+    sql: ${TABLE}.address_first_name ;;
+  }
+
+  dimension: address_last_name {
+    group_label: "Address"
+    label: "Last Name"
+    type: string
+    sql: ${TABLE}.address_last_name ;;
+  }
+
+  dimension: address_locality {
+    group_label: "Address"
+    label: "Locality"
+    type: string
+    sql: ${TABLE}.address_locality ;;
+  }
+
+  dimension: address_postal_code {
+    group_label: "Address"
+    label: "Postal Code"
+    type: number
+    sql: ${TABLE}.address_postal_code ;;
+  }
+
+  dimension: address_region {
+    group_label: "Address"
+    label: "Region"
+    type: string
+    sql: ${TABLE}.address_region ;;
+  }
+
+  dimension: address_street_address {
+    group_label: "Address"
+    label: "Street Address"
+    type: string
+    sql: ${TABLE}.address_street_address ;;
+  }
+
+  dimension: currency_iso_code {
+    type: string
+    sql: ${TABLE}.currency_iso_code ;;
+    description: "The ISO code for the currency the merchant account uses. See the ISO 4217 codes."
+  }
+
+  dimension: date_of_birth {
+    type: string
+    sql: ${TABLE}.date_of_birth ;;
+    description: "The applicant's date of birth."
+  }
+
+  dimension: email {
+    type: string
+    sql: ${TABLE}.email ;;
+    description: "Email address composed of ASCII characters."
+  }
+
+  dimension: first_name {
+    type: string
+    sql: ${TABLE}.first_name ;;
+    description: "The first name."
+  }
+
+  dimension: funding_details_account_number_last4 {
+    group_label: "Funding Details"
+    label: "Last 4"
+    type: number
+    sql: ${TABLE}.funding_details_account_number_last4 ;;
+  }
+
+  dimension: funding_details_descriptor {
+    group_label: "Funding Details"
+    label: "Descriptor"
+    type: string
+    sql: ${TABLE}.funding_details_descriptor ;;
+  }
+
+  dimension: funding_details_destination {
+    group_label: "Funding Details"
+    label: "Destination"
+    type: string
+    sql: ${TABLE}.funding_details_destination ;;
+  }
+
+  dimension: funding_details_email {
+    group_label: "Funding Details"
+    label: "Email"
+    type: string
+    sql: ${TABLE}.funding_details_email ;;
+  }
+
+  dimension: funding_details_mobile_phone {
+    group_label: "Funding Details"
+    label: "Mobile Phone"
+    type: string
+    sql: ${TABLE}.funding_details_mobile_phone ;;
+  }
+
+  dimension: funding_details_routing_number {
+    group_label: "Funding Details"
+    label: "Routing Number"
+    type: number
+    sql: ${TABLE}.funding_details_routing_number ;;
+  }
+
+  dimension: is_default {
+    type: yesno
+    sql: ${TABLE}.is_default ;;
+  }
+
+  dimension: last_name {
+    type: string
+    sql: ${TABLE}.last_name ;;
+    description: "The last name."
+  }
+
+  dimension: phone {
+    type: string
+    sql: ${TABLE}.phone ;;
+    description: "The phone number."
+  }
+
+  dimension: status {
+    type: string
+    sql: ${TABLE}.status ;;
+    description: "The state of the merchant account can either be Pending, Active, or Suspended."
   }
 
   measure: count {
@@ -132,15 +161,14 @@ view: paypal_details {
 
   set: detail {
     fields: [
-      payer_last_name,
-      payer_first_name,
-      transaction.shipping_address_country_name,
-      transaction.billing_address_country_name,
-      transaction.shipping_address_first_name,
-      transaction.refunded_transaction_id,
-      transaction.shipping_address_last_name,
-      transaction.billing_address_first_name,
-      transaction.billing_address_last_name
+      id,
+      address_last_name,
+      address_first_name,
+      last_name,
+      address_country_name,
+      first_name,
+      subscription.count,
+      transaction.count
     ]
   }
 }

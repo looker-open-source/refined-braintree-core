@@ -2,6 +2,7 @@ connection: "@{CONNECTION_NAME}"
 include: "/views/*"
 
 explore: subscription {
+  extension: required
   join: transaction {
     sql_on: ${subscription.id} = ${transaction.subscription_id} ;;
     relationship: one_to_many
@@ -35,6 +36,7 @@ explore: subscription {
 }
 
 explore: transaction {
+  extension: required
   join: paypal_details {
     sql_on: ${transaction.id} = ${paypal_details.transaction_id} ;;
     relationship: many_to_one

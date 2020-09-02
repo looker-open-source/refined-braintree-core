@@ -16,3 +16,8 @@ constant: CONFIG_PROJECT_NAME {
   value: "refinement-braintree-config"
   export: override_optional
 }
+
+constant: ROW_FILTER {
+  value: ""
+  export: override_optional
+}

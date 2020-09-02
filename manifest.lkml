@@ -19,5 +19,4 @@ constant: CONFIG_PROJECT_NAME {
 
 constant: ROW_FILTER {
   value: ""
-  export: override_optional
 }

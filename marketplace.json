@@ -1,5 +1,5 @@
 {
-  "label": "Braintree Payments",
+  "label": "Braintree Payments Refined",
   "category_label": "Models",
   "branding": {
     "image_uri": "https://marketplace-api.looker.com/block-icons/braintree_icon.png",
@@ -20,7 +20,7 @@
   },
   "models": [
     {
-      "name": "block_braintree",
+      "name": "block_braintree_core",
       "connection_constant": "CONNECTION_NAME"
     }
   ],

@@ -19,4 +19,5 @@ constant: CONFIG_PROJECT_NAME {
 
 constant: ROW_FILTER {
   value: "5"
+  export: override_optional
 }

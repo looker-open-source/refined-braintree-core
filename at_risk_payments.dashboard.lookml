@@ -1,4 +1,4 @@
-- dashboard: at_risk_payments_core
+- dashboard: at_risk_payments
   title: At Risk Payments
   layout: newspaper
   elements:

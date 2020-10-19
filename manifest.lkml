@@ -1,4 +1,4 @@
-project_name: "block-braintree-core"
+project_name: "refinement-braintree-core"
 
 ################ Constants ################
 

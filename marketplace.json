@@ -20,7 +20,7 @@
   },
   "models": [
     {
-      "name": "braintree",
+      "name": "marketplace_braintree",
       "connection_constant": "CONNECTION_NAME"
     }
   ],

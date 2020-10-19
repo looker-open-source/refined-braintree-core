@@ -1,4 +1,4 @@
-project_name: "refinement-braintree-core"
+project_name: "marketplace_braintree"
 
 ################ Constants ################
 
@@ -13,7 +13,7 @@ constant: CONNECTION_NAME {
 }
 
 constant: CONFIG_PROJECT_NAME {
-  value: "refinement-braintree-config"
+  value: "marketplace_braintree_config"
   export: override_optional
 }
 
